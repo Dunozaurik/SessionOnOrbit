@@ -91,6 +91,18 @@ def airlock(dur=0.7):
     return out
 
 
+def thud(dur=0.45):
+    """Глухой удар упавшего предмета: низкий тон с быстрым затуханием + щелчок шума."""
+    out, lp = [], 0.0
+    for i in range(int(RATE * dur)):
+        t = i / RATE
+        lp += 0.2 * (random.uniform(-1, 1) - lp)
+        body = math.sin(2 * math.pi * (90 - 50 * t / dur) * t) * math.exp(-t / 0.09)
+        click = lp * math.exp(-t / 0.03)
+        out.append((body * 0.8 + click * 1.2) * 0.7)
+    return out
+
+
 def main():
     save("click", tone(1400, 0.04, 0.35, attack=0.001, decay=0.01))
     save("interact", concat(tone(660, 0.06, 0.3, "tri"), tone(990, 0.08, 0.3, "tri")))
@@ -119,6 +131,7 @@ def main():
     ))
     save("shuttle", shuttle())
     save("door", airlock())
+    save("thud", thud())
     save("success", concat(
         tone(784, 0.08, 0.25, "tri"),
         tone(1047, 0.08, 0.25, "tri"),

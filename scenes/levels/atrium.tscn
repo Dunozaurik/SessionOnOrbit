@@ -222,8 +222,8 @@ spawn_id = "FromAtrium"
 position = Vector3(-7, 0, 11.65)
 rotation = Vector3(0, 3.14159, 0)
 title = "ФИЗИКА"
-locked = true
-locked_message = "Лаборатория физики закрыта: там отключилась гравитация. Ждём, пока всё упадёт."
+target_scene = "res://scenes/levels/physics.tscn"
+spawn_id = "FromAtrium"
 
 [node name="ProgrammingDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(7, 0, 11.65)
