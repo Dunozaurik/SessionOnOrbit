@@ -1,0 +1,232 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/fom.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="5_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="6_npc"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="7_door"]
+[ext_resource type="PackedScene" path="res://scenes/ui/quiz.tscn" id="8_quiz"]
+[ext_resource type="PackedScene" path="res://scenes/props/desk.tscn" id="9_desk"]
+[ext_resource type="PackedScene" path="res://scenes/props/chair.tscn" id="10_chair"]
+[ext_resource type="PackedScene" path="res://scenes/props/cheat_sheet.tscn" id="11_sheet"]
+[ext_resource type="Script" path="res://scripts/props/star_window.gd" id="12_stars"]
+
+[sub_resource type="Environment" id="Environment_fom"]
+background_mode = 1
+background_color = Color(0.02, 0.02, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.6, 0.55, 1)
+ambient_light_energy = 0.45
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.25, 0.27, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.88, 0.85, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_desk"]
+albedo_color = Color(0.5, 0.36, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_moodle"]
+albedo_color = Color(0.2, 0.1, 0.02, 1)
+emission_enabled = true
+emission = Color(0.98, 0.5, 0.07, 1)
+emission_energy_multiplier = 1.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_board"]
+albedo_color = Color(0.08, 0.09, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_window"]
+albedo_color = Color(0.01, 0.01, 0.04, 1)
+metallic = 0.8
+roughness = 0.1
+
+[sub_resource type="BoxMesh" id="Mesh_moodle"]
+material = SubResource("Mat_moodle")
+size = Vector3(0.15, 1.2, 1.8)
+
+[sub_resource type="BoxShape3D" id="Shape_moodle"]
+size = Vector3(0.3, 1.2, 1.8)
+
+[node name="Fom" type="Node3D"]
+script = ExtResource("1_level")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fom")
+
+[node name="LightFront" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -2)
+light_color = Color(1, 0.93, 0.85, 1)
+shadow_enabled = true
+omni_range = 10.0
+
+[node name="LightBack" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 3)
+light_color = Color(0.92, 0.94, 1, 1)
+light_energy = 0.8
+shadow_enabled = true
+omni_range = 9.0
+
+[node name="LightMoodle" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8, 1.6, -1.5)
+light_color = Color(1, 0.55, 0.15, 1)
+light_energy = 0.8
+omni_range = 3.0
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+use_collision = true
+size = Vector3(12, 0.5, 10)
+material = SubResource("Mat_floor")
+
+[node name="Ceiling" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+use_collision = true
+size = Vector3(12, 0.5, 10)
+material = SubResource("Mat_wall")
+
+[node name="WallNorth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -5)
+use_collision = true
+size = Vector3(12, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 5)
+use_collision = true
+size = Vector3(12, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallEast" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.75, 0)
+use_collision = true
+size = Vector3(0.5, 3.5, 10)
+material = SubResource("Mat_wall")
+
+[node name="WallWest" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.75, 0)
+use_collision = true
+size = Vector3(0.5, 3.5, 10)
+material = SubResource("Mat_wall")
+
+[node name="Window" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.74, 1.7, 0.5)
+size = Vector3(0.02, 1.3, 4)
+material = SubResource("Mat_window")
+
+[node name="HallBoard" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, -4.72)
+size = Vector3(4.2, 1.5, 0.06)
+material = SubResource("Mat_board")
+
+[node name="TeacherDesk" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, -3)
+use_collision = true
+size = Vector3(2, 0.8, 0.9)
+material = SubResource("Mat_desk")
+
+[node name="DeskL1" parent="Geometry" instance=ExtResource("9_desk")]
+position = Vector3(-2.5, 0, 0)
+
+[node name="DeskR1" parent="Geometry" instance=ExtResource("9_desk")]
+position = Vector3(2.5, 0, 0)
+
+[node name="DeskL2" parent="Geometry" instance=ExtResource("9_desk")]
+position = Vector3(-2.5, 0, 2)
+
+[node name="DeskR2" parent="Geometry" instance=ExtResource("9_desk")]
+position = Vector3(2.5, 0, 2)
+
+[node name="ChairL1" parent="Geometry" instance=ExtResource("10_chair")]
+position = Vector3(-2.5, 0, 0.65)
+
+[node name="ChairR1" parent="Geometry" instance=ExtResource("10_chair")]
+position = Vector3(2.5, 0, 0.65)
+
+[node name="ChairL2" parent="Geometry" instance=ExtResource("10_chair")]
+position = Vector3(-2.5, 0, 2.65)
+
+[node name="ChairR2" parent="Geometry" instance=ExtResource("10_chair")]
+position = Vector3(2.5, 0, 2.65)
+
+[node name="TeacherChair" parent="Geometry" instance=ExtResource("10_chair")]
+position = Vector3(1.2, 0, -3.9)
+rotation = Vector3(0, 3.14159, 0)
+
+[node name="WindowStars" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.72, 1.7, 0.5)
+script = ExtResource("12_stars")
+size = Vector2(3.8, 1.2)
+seed_value = 2026
+
+[node name="WindowNote" type="Label3D" parent="."]
+position = Vector3(-5.7, 2.65, 0.5)
+rotation = Vector3(0, 1.5708, 0)
+text = "Напоминание: тест закрывается через 20 секунд после открытия.
+Или раньше. Как повезёт."
+font_size = 24
+outline_size = 6
+
+[node name="HallOfFame" type="Label3D" parent="."]
+position = Vector3(-3.9, 2, -4.66)
+modulate = Color(1, 0.86, 0.45, 1)
+text = "ДОСКА ПОЧЁТА"
+font_size = 36
+outline_size = 0
+horizontal_alignment = 0
+
+[node name="MoodleTerminal" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.7, 1.4, -1.5)
+script = ExtResource("5_interactable")
+prompt = "Начать тест в Moodle"
+
+[node name="Mesh" type="MeshInstance3D" parent="MoodleTerminal"]
+mesh = SubResource("Mesh_moodle")
+
+[node name="Collision" type="CollisionShape3D" parent="MoodleTerminal"]
+shape = SubResource("Shape_moodle")
+
+[node name="MoodleLabel" type="Label3D" parent="."]
+position = Vector3(5.6, 2.35, -1.5)
+rotation = Vector3(0, -1.5708, 0)
+modulate = Color(0.98, 0.55, 0.15, 1)
+text = "MOODLE"
+font_size = 56
+outline_size = 10
+
+[node name="Transistorova" parent="." instance=ExtResource("6_npc")]
+position = Vector3(2.4, 0, -3.95)
+display_name = "Доц. Транзисторова"
+subtitle = "(ФОМ)"
+color = Color(0.95, 0.55, 0.2, 1)
+
+[node name="SheetChair" parent="." instance=ExtResource("11_sheet")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.5, 2.65)
+id = "fom_chair"
+text = "Транзистор — это как кран, только для электронов. Пить из него нельзя."
+
+[node name="ExitDoor" parent="." instance=ExtResource("7_door")]
+position = Vector3(0, 0, 4.65)
+rotation = Vector3(0, 3.14159, 0)
+title = "АТРИУМ"
+target_scene = "res://scenes/levels/atrium.tscn"
+spawn_id = "FromFom"
+prompt = "Выйти в атриум"
+
+[node name="FromAtrium" type="Marker3D" parent="." groups=["spawn"]]
+position = Vector3(0, 0, 3.4)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_pause")]
+
+[node name="Quiz" parent="." instance=ExtResource("8_quiz")]

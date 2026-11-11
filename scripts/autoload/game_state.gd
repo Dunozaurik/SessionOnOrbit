@@ -12,7 +12,7 @@ signal cheat_sheets_changed(count: int, total: int)
 signal easter_egg_found(id: String)
 
 const TOTAL_SIGNATURES := 6
-const TOTAL_CHEAT_SHEETS := 4
+const TOTAL_CHEAT_SHEETS := 5
 
 ## Все пасхалки игры: id -> [название, подсказка до нахождения].
 ## Журнал в меню паузы строится по этому списку.
@@ -24,6 +24,7 @@ const EASTER_EGGS := {
 	"andrey_arrived": ["Невозможное возможно", "Говорят, однажды он всё-таки доедет."],
 	"final_final": ["Финал точно финал", "Загляни в чужой компьютер. Там всегда что-то интересное."],
 	"six_seven": ["Six seven", "Попробуй ввести в сейф самое мемное число."],
+	"retake": ["Пересдача — мой путь", "Иногда нужно проиграть, чтобы победить. Трижды."],
 }
 
 ## teacher_id -> true

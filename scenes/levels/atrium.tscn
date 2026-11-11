@@ -215,8 +215,8 @@ locked_message = "Деканат принимает зачётки только 
 [node name="FomDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(7, 0, -11.65)
 title = "ФОМ"
-locked = true
-locked_message = "Аудитория ФОМ закрыта: идёт тест в Moodle. Уже третий год."
+target_scene = "res://scenes/levels/fom.tscn"
+spawn_id = "FromAtrium"
 
 [node name="PhysicsDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(-7, 0, 11.65)
