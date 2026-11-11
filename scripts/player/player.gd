@@ -23,6 +23,9 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Во время диалога ввод забирает окно диалога.
+	if Dialogue.is_active():
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		_head.rotate_x(-event.relative.y * mouse_sensitivity)
@@ -31,16 +34,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		# После alt-tab мышь могла освободиться — клик возвращает захват.
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	elif event.is_action_pressed("interact") and _focused:
+		# Помечаем нажатие обработанным, чтобы открывшийся диалог не пролистнул первую реплику.
+		get_viewport().set_input_as_handled()
 		_focused.interact(self)
 
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
-	elif Input.is_action_just_pressed("jump"):
+	elif Input.is_action_just_pressed("jump") and not Dialogue.is_active():
 		velocity.y = jump_velocity
 
-	var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var input := Vector2.ZERO
+	if not Dialogue.is_active():
+		input = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
 	var speed := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 	velocity.x = direction.x * speed

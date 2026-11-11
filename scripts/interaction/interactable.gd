@@ -13,4 +13,5 @@ signal interacted(player: Player)
 
 func interact(player: Player) -> void:
 	if enabled:
+		Sfx.play("interact", -6.0)
 		interacted.emit(player)

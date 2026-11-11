@@ -22,16 +22,27 @@
 ## Структура
 ```
 scenes/
-  levels/     уровни (сейчас тестовый отсек station_test)
+  levels/     уровни (сейчас атриум-прототип station_test)
+  npc/        npc.tscn — персонаж-заглушка с именем
   player/     игрок от первого лица
-  ui/         главное меню, HUD, пауза
+  props/      предметы (шпора)
+  ui/         главное меню, HUD, пауза с журналом пасхалок, окно диалогов
 scripts/
-  autoload/   GameState — подписи, флаги заданий, пасхалки
-  interaction/Interactable — базовый интерактивный объект
-  levels/ player/ ui/
-assets/       модели, звуки, музыка, шрифты (по мере добавления)
+  autoload/   GameState — подписи, шпоры, флаги, пасхалки; Sfx — звуки
+  data/       тексты (истории Андрея и т. п.)
+  interaction/Interactable, Npc, CheatSheet
+  levels/     логика уровней и сюжетных линий
+  player/ ui/
+assets/       модели, звуки, музыка, шрифты
+tools/        generate_sfx.py — генератор собственных звуков
 ASSETS.md     перечень ассетов и лицензий
 ```
+
+## Автозагрузки
+- **GameState** — состояние прохождения, список всех пасхалок (`EASTER_EGGS`).
+- **Sfx** — `Sfx.play("pickup")`, `Sfx.play_at("ding", позиция)`; кнопки озвучиваются сами.
+- **Dialogue** — `Dialogue.start([{"speaker": "Имя", "text": "..."}])`, поддерживает
+  варианты ответа (`"choices"`) и вызов функции на реплике (`"call"`).
 
 ## Как добавить интерактивный объект
 1. Создать `StaticBody3D` с мешем и `CollisionShape3D`.

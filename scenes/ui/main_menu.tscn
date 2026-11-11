@@ -86,5 +86,5 @@ offset_bottom = -12.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 0.4)
-text = "v0.1 · прототип"
+text = "v0.2 · прототип"
 horizontal_alignment = 2
