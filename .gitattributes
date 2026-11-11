@@ -1,0 +1,8 @@
+# Godot хранит текстовые файлы с LF
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.glb binary
+*.ogg binary
+*.wav binary
+*.mp3 binary

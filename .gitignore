@@ -1,0 +1,10 @@
+# Кэш Godot — пересоздаётся автоматически
+.godot/
+
+# Собранные билды
+build/
+
+# Системный мусор
+Thumbs.db
+desktop.ini
+.DS_Store
