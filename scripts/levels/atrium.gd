@@ -41,7 +41,7 @@ func _ready() -> void:
 	_restore_state()
 	if not GameState.flags.get("shift_started", false):
 		GameState.flags["shift_started"] = true
-		GameState.post_message("Смена началась. Собери %d подписей в зачётку и сдай её в деканат." % GameState.TOTAL_SIGNATURES)
+		GameState.post_message("Смена началась. Собери %d подписей и сдай зачётку в деканат. Список предметов — по Tab." % GameState.TOTAL_SIGNATURES)
 
 
 ## Возвращает атриум в то состояние, в котором его оставили.
@@ -77,12 +77,12 @@ func _on_zaglushkin(_player: Player) -> void:
 	if GameState.has_signature("zaglushkin"):
 		Dialogue.start([{
 			"speaker": ZAGLUSHKIN,
-			"text": "Я уже расписался. Остальные преподаватели сидят по отсекам — двери по периметру атриума. Иди, не задерживай временного человека.",
+			"text": "Я уже расписался. Остальные преподаватели сидят по отсекам, и сдавать их надо строго по порядку — загляни в зачётку, клавиша Tab. Иди, не задерживай временного человека.",
 		}])
 		return
 	var sign_line := {
 		"speaker": ZAGLUSHKIN,
-		"text": "Ладно, подпишу, раз я пока капсула. Но модельку мне потом нормальную сделай!",
+		"text": "Ладно, подпишу, раз я пока капсула. Но модельку мне потом нормальную сделай! Дальше — компьютерный класс. Сдаём строго по порядку: он у тебя в зачётке, клавиша Tab.",
 		"call": GameState.add_signature.bind("zaglushkin"),
 	}
 	Dialogue.start([

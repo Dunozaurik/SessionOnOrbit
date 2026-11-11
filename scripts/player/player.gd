@@ -11,6 +11,8 @@ signal focus_changed(target: Interactable)
 @export var mouse_sensitivity := 0.002
 ## Множитель гравитации для игрока (в лаборатории физики со сломанным генератором < 1).
 @export var gravity_scale := 1.0
+## false — прыжки отключены (магнитные ботинки в открытом космосе).
+@export var can_jump := true
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _focused: Interactable
@@ -45,7 +47,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * gravity_scale * delta
-	elif Input.is_action_just_pressed("jump") and not _is_busy():
+	elif Input.is_action_just_pressed("jump") and can_jump and not _is_busy():
 		velocity.y = jump_velocity
 
 	var input := Vector2.ZERO

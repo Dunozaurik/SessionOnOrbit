@@ -11,8 +11,19 @@ signal signatures_changed(count: int, total: int)
 signal cheat_sheets_changed(count: int, total: int)
 signal easter_egg_found(id: String)
 
-const TOTAL_SIGNATURES := 6
 const TOTAL_CHEAT_SHEETS := 5
+
+## Предметы сессии в порядке сдачи: следующий открывается только после подписи за предыдущий.
+## id — ключ подписи, room — где искать преподавателя (для зачётки по Tab).
+const SUBJECTS: Array[Dictionary] = [
+	{"id": "zaglushkin", "title": "Пробный зачёт", "teacher": "Проф. Заглушкин", "room": "центр атриума"},
+	{"id": "syntaksisov", "title": "Программирование", "teacher": "Ст. преп. Синтаксисов", "room": "компьютерный класс"},
+	{"id": "integralov", "title": "Высшая математика", "teacher": "Проф. Интегралов", "room": "кафедра высшей математики"},
+	{"id": "transistorova", "title": "ФОМ", "teacher": "Доц. Транзисторова", "room": "аудитория ФОМ"},
+	{"id": "nevesomova", "title": "Физика", "teacher": "Доц. Невесомова", "room": "лаборатория физики"},
+	{"id": "perestrakhov", "title": "БЖД", "teacher": "Инструктор Перестрахов", "room": "шлюз БЖД"},
+]
+const TOTAL_SIGNATURES := 6
 
 ## Все пасхалки игры: id -> [название, подсказка до нахождения].
 ## Журнал в меню паузы строится по этому списку.
@@ -26,6 +37,7 @@ const EASTER_EGGS := {
 	"six_seven": ["Six seven", "Попробуй ввести в сейф самое мемное число."],
 	"retake": ["Пересдача — мой путь", "Иногда нужно проиграть, чтобы победить. Трижды."],
 	"newton": ["Ньютон доволен", "Некоторые законы физики стоит проверить дважды: до и после."],
+	"bzhd_textbook": ["Учебник БЖД в картинках", "Есть много способов не сдать БЖД. Попробуй хотя бы три."],
 }
 
 ## teacher_id -> true
@@ -58,6 +70,22 @@ func reset() -> void:
 
 func has_signature(teacher_id: String) -> bool:
 	return signatures.has(teacher_id)
+
+
+## Индекс текущего предмета в SUBJECTS (первый без подписи); SUBJECTS.size() — всё сдано.
+func current_subject_index() -> int:
+	for i in SUBJECTS.size():
+		if not has_signature(SUBJECTS[i]["id"]):
+			return i
+	return SUBJECTS.size()
+
+
+## Можно ли идти сдавать предмет: он уже сдан или следующий по очереди.
+func is_subject_open(teacher_id: String) -> bool:
+	for i in SUBJECTS.size():
+		if SUBJECTS[i]["id"] == teacher_id:
+			return i <= current_subject_index()
+	return true
 
 
 func add_signature(teacher_id: String) -> void:

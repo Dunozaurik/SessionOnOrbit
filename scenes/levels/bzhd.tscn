@@ -1,0 +1,721 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/bzhd.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="5_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="6_npc"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="7_door"]
+[ext_resource type="Script" path="res://scripts/props/starfield.gd" id="8_stars"]
+[ext_resource type="Script" path="res://scripts/props/spin.gd" id="9_spin"]
+[ext_resource type="Script" path="res://scripts/props/railing.gd" id="10_railing"]
+
+[sub_resource type="Environment" id="Environment_space"]
+background_mode = 1
+background_color = Color(0.005, 0.005, 0.02, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.5, 0.55, 0.7, 1)
+ambient_light_energy = 0.4
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.25, 0.27, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.86, 0.86, 0.82, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_airlock"]
+albedo_color = Color(0.55, 0.58, 0.62, 1)
+metallic = 0.5
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_hull"]
+albedo_color = Color(0.4, 0.42, 0.47, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_door"]
+albedo_color = Color(0.85, 0.6, 0.15, 1)
+metallic = 0.5
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_suit"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+emission_enabled = true
+emission = Color(1, 0.55, 0.2, 1)
+emission_energy_multiplier = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Mat_oxygen"]
+albedo_color = Color(0.05, 0.2, 0.1, 1)
+emission_enabled = true
+emission = Color(0.3, 1, 0.5, 1)
+emission_energy_multiplier = 1.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_yellow"]
+albedo_color = Color(0.95, 0.8, 0.1, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.2, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_blue"]
+albedo_color = Color(0.1, 0.25, 0.6, 1)
+emission_enabled = true
+emission = Color(0.3, 0.55, 1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_red"]
+albedo_color = Color(0.6, 0.05, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_orange"]
+albedo_color = Color(0.6, 0.3, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.5, 0.1, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_poster"]
+albedo_color = Color(0.95, 0.92, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_mug"]
+albedo_color = Color(0.95, 0.95, 0.98, 1)
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_earth"]
+albedo_color = Color(0.15, 0.35, 0.8, 1)
+emission_enabled = true
+emission = Color(0.2, 0.45, 0.9, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="BoxMesh" id="Mesh_door"]
+material = SubResource("Mat_door")
+size = Vector3(0.2, 2.5, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_door"]
+size = Vector3(0.2, 2.5, 2)
+
+[sub_resource type="BoxMesh" id="Mesh_suit"]
+material = SubResource("Mat_suit")
+size = Vector3(1, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="Shape_suit"]
+size = Vector3(1, 2, 0.6)
+
+[sub_resource type="BoxMesh" id="Mesh_oxygen"]
+material = SubResource("Mat_oxygen")
+size = Vector3(0.7, 0.5, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_hook"]
+material = SubResource("Mat_yellow")
+size = Vector3(0.2, 0.3, 0.15)
+
+[sub_resource type="BoxMesh" id="Mesh_button_blue"]
+material = SubResource("Mat_blue")
+size = Vector3(0.25, 0.25, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_button_orange"]
+material = SubResource("Mat_orange")
+size = Vector3(0.25, 0.25, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_lever"]
+material = SubResource("Mat_red")
+size = Vector3(0.15, 0.6, 0.15)
+
+[sub_resource type="BoxShape3D" id="Shape_panel"]
+size = Vector3(0.7, 0.7, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_poster"]
+material = SubResource("Mat_poster")
+size = Vector3(2.4, 1.5, 0.05)
+
+[sub_resource type="BoxShape3D" id="Shape_poster"]
+size = Vector3(2.4, 1.5, 0.2)
+
+[sub_resource type="CylinderMesh" id="Mesh_mug"]
+material = SubResource("Mat_mug")
+top_radius = 0.09
+bottom_radius = 0.08
+height = 0.2
+
+[sub_resource type="BoxShape3D" id="Shape_mug"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="CylinderMesh" id="Mesh_rope"]
+material = SubResource("Mat_yellow")
+top_radius = 0.02
+bottom_radius = 0.02
+height = 1.0
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="Mesh_antenna"]
+material = SubResource("Mat_hull")
+top_radius = 0.04
+bottom_radius = 0.06
+height = 3.0
+
+[sub_resource type="SphereMesh" id="Mesh_earth"]
+material = SubResource("Mat_earth")
+radius = 35.0
+height = 70.0
+
+[sub_resource type="BoxShape3D" id="Shape_zone"]
+size = Vector3(4.2, 2.2, 3.6)
+
+[sub_resource type="BoxShape3D" id="Shape_outside"]
+size = Vector3(13.8, 4, 6)
+
+[sub_resource type="CylinderMesh" id="Mesh_bolt"]
+material = SubResource("Mat_hull")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.4
+
+[sub_resource type="TorusMesh" id="Mesh_nut"]
+material = SubResource("Mat_hull")
+inner_radius = 0.06
+outer_radius = 0.13
+
+[sub_resource type="BoxMesh" id="Mesh_note"]
+material = SubResource("Mat_poster")
+size = Vector3(0.25, 0.01, 0.35)
+
+[sub_resource type="BoxShape3D" id="Shape_debris"]
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_helmet"]
+draw_center = false
+border_width_left = 34
+border_width_top = 26
+border_width_right = 34
+border_width_bottom = 26
+border_color = Color(0.03, 0.04, 0.06, 0.9)
+corner_radius_top_left = 260
+corner_radius_top_right = 260
+corner_radius_bottom_right = 260
+corner_radius_bottom_left = 260
+corner_detail = 16
+
+[node name="Bzhd" type="Node3D"]
+script = ExtResource("1_level")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_space")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, -0.6, 0.62, 0, 0.72, 0.69, -0.87, -0.35, 0.36, 0, 10, 0)
+light_color = Color(1, 0.97, 0.9, 1)
+shadow_enabled = true
+
+[node name="LightBriefing" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3, 0)
+light_color = Color(1, 0.95, 0.88, 1)
+light_energy = 1.2
+omni_range = 8.0
+
+[node name="LightAirlock" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.6, 0)
+light_color = Color(0.9, 0.95, 1, 1)
+light_energy = 0.9
+omni_range = 5.0
+
+[node name="WarningLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.4, 0)
+light_color = Color(1, 0.15, 0.1, 1)
+light_energy = 0.0
+omni_range = 5.0
+
+[node name="Starfield" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+script = ExtResource("8_stars")
+
+[node name="Earth" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 90, -35, -60)
+mesh = SubResource("Mesh_earth")
+
+[node name="GatchinaSign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 10, 30)
+pixel_size = 0.02
+billboard = 1
+modulate = Color(1, 0.85, 0.3, 1)
+text = "Гатчина-4 →
+(где-то там. Андрей тоже)"
+font_size = 160
+outline_size = 20
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="BriefingFloor" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.25, 0)
+use_collision = true
+size = Vector3(6, 0.5, 8)
+material = SubResource("Mat_floor")
+
+[node name="BriefingCeiling" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3.75, 0)
+use_collision = true
+size = Vector3(6, 0.5, 8)
+material = SubResource("Mat_wall")
+
+[node name="BriefingWest" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.75, 0)
+use_collision = true
+size = Vector3(0.5, 3.5, 8)
+material = SubResource("Mat_wall")
+
+[node name="BriefingNorth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.75, -4)
+use_collision = true
+size = Vector3(6.5, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="BriefingSouth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.75, 4)
+use_collision = true
+size = Vector3(6.5, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="BriefingEastA" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -2.5)
+use_collision = true
+size = Vector3(0.5, 3.5, 3)
+material = SubResource("Mat_wall")
+
+[node name="BriefingEastB" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 2.5)
+use_collision = true
+size = Vector3(0.5, 3.5, 3)
+material = SubResource("Mat_wall")
+
+[node name="BriefingLintel" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+use_collision = true
+size = Vector3(0.5, 1, 2)
+material = SubResource("Mat_wall")
+
+[node name="AirlockFloor" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.25, 0)
+use_collision = true
+size = Vector3(5, 0.5, 4)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockCeiling" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3.25, 0)
+use_collision = true
+size = Vector3(5, 0.5, 4)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockNorth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, -2.1)
+use_collision = true
+size = Vector3(5, 3, 0.3)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockSouth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, 2.1)
+use_collision = true
+size = Vector3(5, 3, 0.3)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockEastA" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -1.6)
+use_collision = true
+size = Vector3(0.3, 3, 1.2)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockEastB" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 1.6)
+use_collision = true
+size = Vector3(0.3, 3, 1.2)
+material = SubResource("Mat_airlock")
+
+[node name="AirlockLintel" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.75, 0)
+use_collision = true
+size = Vector3(0.3, 0.5, 2)
+material = SubResource("Mat_airlock")
+
+[node name="StationHull" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, -3.3, 0)
+use_collision = true
+size = Vector3(17, 5.5, 13)
+material = SubResource("Mat_hull")
+
+[node name="HullPlatform" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.1, -0.25, 0)
+use_collision = true
+size = Vector3(4.2, 0.5, 4)
+material = SubResource("Mat_hull")
+
+[node name="Truss" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.6, -0.15, 0)
+use_collision = true
+size = Vector3(7, 0.3, 1.2)
+material = SubResource("Mat_hull")
+
+[node name="EndPlatform" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, -0.25, 0)
+use_collision = true
+size = Vector3(2.6, 0.5, 2.6)
+material = SubResource("Mat_hull")
+
+[node name="Railing" type="Node3D" parent="Geometry"]
+script = ExtResource("10_railing")
+segments = PackedVector3Array(5.15, 0, -1.95, 9.15, 0, -1.95, 5.15, 0, 1.95, 9.15, 0, 1.95, 9.15, 0, -1.95, 9.15, 0, -0.55, 9.15, 0, 0.55, 9.15, 0, 1.95, 9.15, 0, -0.55, 16, 0, -0.55, 9.15, 0, 0.55, 16, 0, 0.55, 16, 0, -0.55, 16, 0, -1.25, 16, 0, 0.55, 16, 0, 1.25, 16, 0, -1.25, 18.55, 0, -1.25, 16, 0, 1.25, 18.55, 0, 1.25, 18.55, 0, -1.25, 18.55, 0, 1.25)
+
+[node name="Antenna" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.5, 1.6)
+mesh = SubResource("Mesh_antenna")
+
+[node name="Poster" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 1.8, -3.72)
+script = ExtResource("5_interactable")
+prompt = "Прочитать инструкцию"
+
+[node name="Mesh" type="MeshInstance3D" parent="Poster"]
+mesh = SubResource("Mesh_poster")
+
+[node name="Collision" type="CollisionShape3D" parent="Poster"]
+shape = SubResource("Shape_poster")
+
+[node name="PosterText" type="Label3D" parent="Poster"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.04)
+modulate = Color(0.1, 0.1, 0.12, 1)
+text = "ИНСТРУКЦИЯ (стр. 2 из 2)
+...
+4. Закрыть внутреннюю дверь
+5. Разгерметизировать шлюз
+6. Открыть внешнюю дверь"
+font_size = 30
+outline_size = 0
+
+[node name="SafetySlogan" type="Label3D" parent="."]
+position = Vector3(-3, 2, 3.72)
+rotation = Vector3(0, 3.14159, 0)
+modulate = Color(0.85, 0.15, 0.1, 1)
+text = "ПЕРЕСТРАХУЙСЯ!
+(а потом ещё раз)"
+font_size = 64
+outline_size = 10
+
+[node name="AirlockSign" type="Label3D" parent="."]
+position = Vector3(-0.3, 2.85, 0)
+rotation = Vector3(0, -1.5708, 0)
+text = "ШЛЮЗ
+только по инструкции!"
+font_size = 30
+outline_size = 8
+
+[node name="Perestrakhov" parent="." instance=ExtResource("6_npc")]
+position = Vector3(-2.5, 0, -2.8)
+display_name = "Инструктор Перестрахов"
+subtitle = "(БЖД)"
+color = Color(0.85, 0.75, 0.2, 1)
+
+[node name="InnerDoor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="InnerDoor"]
+mesh = SubResource("Mesh_door")
+
+[node name="Collision" type="CollisionShape3D" parent="InnerDoor"]
+shape = SubResource("Shape_door")
+
+[node name="OuterDoor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.25, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="OuterDoor"]
+mesh = SubResource("Mesh_door")
+
+[node name="Collision" type="CollisionShape3D" parent="OuterDoor"]
+shape = SubResource("Shape_door")
+
+[node name="SuitLocker" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1, -1.7)
+script = ExtResource("5_interactable")
+prompt = "Надеть скафандр"
+
+[node name="Mesh" type="MeshInstance3D" parent="SuitLocker"]
+mesh = SubResource("Mesh_suit")
+
+[node name="Collision" type="CollisionShape3D" parent="SuitLocker"]
+shape = SubResource("Shape_suit")
+
+[node name="OxygenPanel" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 1.4, -1.9)
+script = ExtResource("5_interactable")
+prompt = "Проверить кислород"
+
+[node name="Mesh" type="MeshInstance3D" parent="OxygenPanel"]
+mesh = SubResource("Mesh_oxygen")
+
+[node name="Collision" type="CollisionShape3D" parent="OxygenPanel"]
+shape = SubResource("Shape_panel")
+
+[node name="TetherHook" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.4, -1.9)
+script = ExtResource("5_interactable")
+prompt = "Пристегнуть страховочный трос"
+
+[node name="Mesh" type="MeshInstance3D" parent="TetherHook"]
+mesh = SubResource("Mesh_hook")
+
+[node name="Collision" type="CollisionShape3D" parent="TetherHook"]
+shape = SubResource("Shape_panel")
+
+[node name="InnerButton" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.3, 1.9)
+script = ExtResource("5_interactable")
+prompt = "Внутренняя дверь"
+
+[node name="Mesh" type="MeshInstance3D" parent="InnerButton"]
+mesh = SubResource("Mesh_button_blue")
+
+[node name="Collision" type="CollisionShape3D" parent="InnerButton"]
+shape = SubResource("Shape_panel")
+
+[node name="PressureLever" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.1, 1.9)
+script = ExtResource("5_interactable")
+prompt = "Рычаг давления"
+
+[node name="Mesh" type="MeshInstance3D" parent="PressureLever"]
+mesh = SubResource("Mesh_lever")
+
+[node name="Collision" type="CollisionShape3D" parent="PressureLever"]
+shape = SubResource("Shape_panel")
+
+[node name="OuterButton" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 1.3, 1.9)
+script = ExtResource("5_interactable")
+prompt = "Внешняя дверь"
+
+[node name="Mesh" type="MeshInstance3D" parent="OuterButton"]
+mesh = SubResource("Mesh_button_orange")
+
+[node name="Collision" type="CollisionShape3D" parent="OuterButton"]
+shape = SubResource("Shape_panel")
+
+[node name="LabelSuit" type="Label3D" parent="."]
+position = Vector3(1.1, 2.25, -1.4)
+text = "СКАФАНДР"
+font_size = 28
+outline_size = 8
+
+[node name="LabelOxygen" type="Label3D" parent="."]
+position = Vector3(2.6, 1.85, -1.8)
+text = "O2"
+font_size = 28
+outline_size = 8
+
+[node name="LabelTether" type="Label3D" parent="."]
+position = Vector3(4, 1.85, -1.8)
+text = "ТРОС"
+font_size = 28
+outline_size = 8
+
+[node name="LabelInner" type="Label3D" parent="."]
+position = Vector3(0.6, 1.7, 1.8)
+rotation = Vector3(0, 3.14159, 0)
+text = "ВНУТР. ДВЕРЬ"
+font_size = 24
+outline_size = 8
+
+[node name="LabelPressure" type="Label3D" parent="."]
+position = Vector3(2.5, 1.7, 1.8)
+rotation = Vector3(0, 3.14159, 0)
+text = "ДАВЛЕНИЕ"
+font_size = 24
+outline_size = 8
+
+[node name="LabelOuter" type="Label3D" parent="."]
+position = Vector3(4.4, 1.7, 1.8)
+rotation = Vector3(0, 3.14159, 0)
+text = "ВНЕШН. ДВЕРЬ"
+font_size = 24
+outline_size = 8
+
+[node name="AirlockZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.2, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="AirlockZone"]
+shape = SubResource("Shape_zone")
+
+[node name="OutsideZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 1, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="OutsideZone"]
+shape = SubResource("Shape_outside")
+
+[node name="Debris" type="Node3D" parent="."]
+
+[node name="Bolt" type="StaticBody3D" parent="Debris"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1.3, 1.5)
+script = ExtResource("5_interactable")
+prompt = "Рассмотреть"
+metadata/description = "Болт М12. Судя по маркировке — от генератора гравитации из лаборатории физики. Так вот почему он сломался."
+
+[node name="Mesh" type="MeshInstance3D" parent="Debris/Bolt"]
+transform = Transform3D(0.7, -0.7, 0, 0.7, 0.7, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Mesh_bolt")
+script = ExtResource("9_spin")
+speed = 0.6
+bob = 0.15
+
+[node name="Collision" type="CollisionShape3D" parent="Debris/Bolt"]
+shape = SubResource("Shape_debris")
+
+[node name="Nut" type="StaticBody3D" parent="Debris"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2, 1.7, -1.5)
+script = ExtResource("5_interactable")
+prompt = "Рассмотреть"
+metadata/description = "Гайка. Летит по орбите со скоростью 28 000 км/ч. Как и твоя сессия."
+
+[node name="Mesh" type="MeshInstance3D" parent="Debris/Nut"]
+mesh = SubResource("Mesh_nut")
+script = ExtResource("9_spin")
+speed = 1.1
+bob = 0.1
+
+[node name="Collision" type="CollisionShape3D" parent="Debris/Nut"]
+shape = SubResource("Shape_debris")
+
+[node name="Note" type="StaticBody3D" parent="Debris"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 1.5, -2.7)
+script = ExtResource("5_interactable")
+prompt = "Рассмотреть"
+metadata/description = "Чья-то шпаргалка по БЖД, улетевшая в открытый космос. На ней одна строчка: «Пункт 1 — не выходить в открытый космос»."
+
+[node name="Mesh" type="MeshInstance3D" parent="Debris/Note"]
+mesh = SubResource("Mesh_note")
+script = ExtResource("9_spin")
+speed = 0.4
+bob = 0.12
+
+[node name="Collision" type="CollisionShape3D" parent="Debris/Note"]
+shape = SubResource("Shape_debris")
+
+[node name="TetherRope" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("Mesh_rope")
+
+[node name="Mug" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.4, 1.3, 0.3)
+script = ExtResource("5_interactable")
+prompt = "Поймать кружку инструктора"
+
+[node name="Mesh" type="MeshInstance3D" parent="Mug"]
+mesh = SubResource("Mesh_mug")
+script = ExtResource("9_spin")
+speed = 0.8
+bob = 0.12
+
+[node name="Glow" type="OmniLight3D" parent="Mug"]
+light_color = Color(0.9, 0.95, 1, 1)
+light_energy = 0.8
+omni_range = 2.0
+
+[node name="Collision" type="CollisionShape3D" parent="Mug"]
+shape = SubResource("Shape_mug")
+
+[node name="ExitDoor" parent="." instance=ExtResource("7_door")]
+position = Vector3(-5.65, 0, 0)
+rotation = Vector3(0, 1.5708, 0)
+title = "АТРИУМ"
+target_scene = "res://scenes/levels/atrium.tscn"
+spawn_id = "FromBzhd"
+prompt = "Выйти в атриум"
+
+[node name="FromAtrium" type="Marker3D" parent="." groups=["spawn"]]
+position = Vector3(-4.3, 0, 0)
+rotation = Vector3(0, -1.5708, 0)
+
+[node name="BriefingSpawn" type="Marker3D" parent="."]
+position = Vector3(-2, 0, 0.5)
+rotation = Vector3(0, -1.5708, 0)
+
+[node name="OutsideSpawn" type="Marker3D" parent="."]
+position = Vector3(6.2, 0, 0)
+rotation = Vector3(0, -1.5708, 0)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.3, 0, 0)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="Helmet" type="Panel" parent="Overlay"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_helmet")
+
+[node name="SuitStatus" type="Label" parent="Overlay/Helmet"]
+unique_name_in_owner = true
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -62.0
+offset_right = 300.0
+offset_bottom = -36.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.45, 0.95, 1, 0.9)
+theme_override_font_sizes/font_size = 16
+text = "СКАФАНДР"
+horizontal_alignment = 1
+
+[node name="DeathLayer" type="CanvasLayer" parent="."]
+layer = 8
+
+[node name="Death" type="ColorRect" parent="DeathLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.45, 0.02, 0.02, 0.92)
+
+[node name="Box" type="VBoxContainer" parent="DeathLayer/Death"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -420.0
+offset_top = -140.0
+offset_right = 420.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="DeathLayer/Death/Box"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 80
+text = "НЕЗАЧЁТ"
+horizontal_alignment = 1
+
+[node name="DeathReason" type="Label" parent="DeathLayer/Death/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Причина"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_pause")]

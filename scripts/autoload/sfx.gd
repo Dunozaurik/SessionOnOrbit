@@ -7,7 +7,7 @@ extends Node
 const SOUND_DIR := "res://assets/audio/sfx/"
 const SOUNDS: Array[String] = [
 	"click", "interact", "blip", "pickup", "egg", "denied", "ding", "chat", "shuttle",
-	"door", "success", "thud",
+	"door", "success", "thud", "hiss", "fail",
 ]
 const POOL_SIZE := 8
 

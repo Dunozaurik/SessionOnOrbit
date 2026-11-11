@@ -203,6 +203,7 @@ material = SubResource("Mat_elevator_inside")
 [node name="MathDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(-7, 0, -11.65)
 title = "ВЫСШАЯ МАТЕМАТИКА"
+subject_id = "integralov"
 target_scene = "res://scenes/levels/math.tscn"
 spawn_id = "FromAtrium"
 
@@ -215,6 +216,7 @@ locked_message = "Деканат принимает зачётки только 
 [node name="FomDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(7, 0, -11.65)
 title = "ФОМ"
+subject_id = "transistorova"
 target_scene = "res://scenes/levels/fom.tscn"
 spawn_id = "FromAtrium"
 
@@ -222,6 +224,7 @@ spawn_id = "FromAtrium"
 position = Vector3(-7, 0, 11.65)
 rotation = Vector3(0, 3.14159, 0)
 title = "ФИЗИКА"
+subject_id = "nevesomova"
 target_scene = "res://scenes/levels/physics.tscn"
 spawn_id = "FromAtrium"
 
@@ -229,6 +232,7 @@ spawn_id = "FromAtrium"
 position = Vector3(7, 0, 11.65)
 rotation = Vector3(0, 3.14159, 0)
 title = "ПРОГРАММИРОВАНИЕ"
+subject_id = "syntaksisov"
 target_scene = "res://scenes/levels/programming.tscn"
 spawn_id = "FromAtrium"
 
@@ -236,8 +240,9 @@ spawn_id = "FromAtrium"
 position = Vector3(11.65, 0, -7)
 rotation = Vector3(0, -1.5708, 0)
 title = "БЖД · ШЛЮЗ"
-locked = true
-locked_message = "Шлюз БЖД закрыт. Инструктор проверяет, достаточно ли он перестраховался."
+subject_id = "perestrakhov"
+target_scene = "res://scenes/levels/bzhd.tscn"
+spawn_id = "FromAtrium"
 
 [node name="Spawns" type="Node3D" parent="."]
 

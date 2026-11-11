@@ -103,6 +103,27 @@ def thud(dur=0.45):
     return out
 
 
+def hiss(dur=1.6):
+    """Шипение уходящего воздуха при разгерметизации: шум, затухающий к концу."""
+    out, lp = [], 0.0
+    for i in range(int(RATE * dur)):
+        t = i / RATE
+        x = t / dur
+        env = min(1.0, t / 0.05) * (1.0 - x) ** 1.5
+        cutoff = 0.6 - 0.45 * x
+        lp += cutoff * (random.uniform(-1, 1) - lp)
+        out.append(lp * env * 0.6)
+    return out
+
+
+def fail(dur=1.2):
+    """«Незачёт»: два нисходящих тона и низкий гул."""
+    return mix(
+        concat(tone(392, 0.25, 0.3, "square", decay=0.2), tone(262, 0.6, 0.3, "square", decay=0.35)),
+        tone(65, dur, 0.25, attack=0.01, decay=0.5),
+    )
+
+
 def main():
     save("click", tone(1400, 0.04, 0.35, attack=0.001, decay=0.01))
     save("interact", concat(tone(660, 0.06, 0.3, "tri"), tone(990, 0.08, 0.3, "tri")))
@@ -132,6 +153,8 @@ def main():
     save("shuttle", shuttle())
     save("door", airlock())
     save("thud", thud())
+    save("hiss", hiss())
+    save("fail", fail())
     save("success", concat(
         tone(784, 0.08, 0.25, "tri"),
         tone(1047, 0.08, 0.25, "tri"),

@@ -17,12 +17,26 @@ const LOCKED_COLOR := Color(1, 0.2, 0.15)
 		if is_node_ready():
 			_update_light()
 @export_multiline var locked_message := "Закрыто."
+## Предмет за этой дверью (id из GameState.SUBJECTS). Если задан, дверь открывается
+## только когда до этого предмета дошла очередь — сессия сдаётся по порядку.
+@export var subject_id := ""
 
 
 func _ready() -> void:
 	%Sign.text = title
 	interacted.connect(_on_interacted)
+	if not subject_id.is_empty():
+		GameState.signatures_changed.connect(_update_subject_lock.unbind(2))
+		_update_subject_lock()
 	_update_light()
+
+
+func _update_subject_lock() -> void:
+	locked = not GameState.is_subject_open(subject_id)
+	if locked:
+		var current: Dictionary = GameState.SUBJECTS[GameState.current_subject_index()]
+		locked_message = "Сюда пока рано: сессия сдаётся по порядку. Сначала — «%s» (%s, %s). Порядок — в зачётке по Tab." % [
+			current["title"], current["teacher"], current["room"]]
 
 
 func _update_light() -> void:
