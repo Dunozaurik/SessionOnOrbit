@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/code_puzzle.tscn" id="8_puzzle"]
 [ext_resource type="Script" path="res://scripts/props/star_window.gd" id="9_stars"]
 [ext_resource type="PackedScene" path="res://scenes/props/desk.tscn" id="10_desk"]
+[ext_resource type="PackedScene" path="res://scenes/props/chair.tscn" id="11_chair"]
 
 [sub_resource type="Environment" id="Environment_class"]
 background_mode = 1
@@ -149,6 +150,28 @@ position = Vector3(0, 0, 1.3)
 [node name="DeskB3" parent="Geometry" instance=ExtResource("10_desk")]
 position = Vector3(4, 0, 1.3)
 
+[node name="ChairA1" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(-4, 0, -0.85)
+
+[node name="ChairA2" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(0, 0, -0.85)
+
+[node name="ChairA3" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(4, 0, -0.85)
+
+[node name="ChairB1" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(-4, 0, 1.95)
+
+[node name="ChairB2" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(0, 0, 1.95)
+
+[node name="ChairB3" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(4, 0, 1.95)
+
+[node name="TeacherChair" parent="Geometry" instance=ExtResource("11_chair")]
+position = Vector3(-0.2, 0, -4.9)
+rotation = Vector3(0, 3.14159, 0)
+
 [node name="MonitorA1" type="MeshInstance3D" parent="Geometry"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.0, -1.7)
 mesh = SubResource("Mesh_monitor")
@@ -217,7 +240,7 @@ subtitle = "(программирование)"
 color = Color(0.35, 0.5, 0.85, 1)
 
 [node name="Semicolon" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 0, 1.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.55, 0, 1.3)
 script = ExtResource("5_interactable")
 prompt = "Подобрать точку с запятой"
 

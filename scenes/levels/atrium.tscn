@@ -203,8 +203,8 @@ material = SubResource("Mat_elevator_inside")
 [node name="MathDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(-7, 0, -11.65)
 title = "ВЫСШАЯ МАТЕМАТИКА"
-locked = true
-locked_message = "Кафедра высшей математики на ремонте: её ещё не построили. Приходите в следующем обновлении."
+target_scene = "res://scenes/levels/math.tscn"
+spawn_id = "FromAtrium"
 
 [node name="DeaneryDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(0, 0, -11.65)
