@@ -2,17 +2,17 @@ extends Node
 
 ## Сюжетная пасхалка про Андрея Лабонина.
 ##
-## 1. Пока Андрей «едет», в чат группы падают его сообщения, а табло в доке
-##    показывает очередной абсурдный статус шаттла с Гатчины-4.
+## 1. Пока Андрей «едет», в чат группы (уведомление в углу экрана) приходят его сообщения,
+##    а табло в доке показывает очередной абсурдный статус шаттла с Гатчины-4.
 ## 2. Терминал связи рассказывает его истории «вы не поверите, что произошло».
-## 3. Выслушал все истории — Андрей выезжает, на табло идёт обратный отсчёт.
+## 3. Выслушал все истории — Андрей выезжает, на табло обратный отсчёт, в чат — репортаж из полёта.
 ## 4. Шаттл прилетает, Андрей появляется в доке. Пасхалка «Невозможное возможно».
 
 enum Stage { WAITING, TRAVELLING, ARRIVED }
 
 const TRAVEL_TIME := 60.0
-const BOARD_SWITCH_TIME := 5.0
-const CHAT_INTERVAL := Vector2(45.0, 80.0)
+const BOARD_SWITCH_TIME := 20.0
+const CHAT_INTERVAL := Vector2(50.0, 90.0)
 
 @export var terminal: Interactable
 @export var board: Label3D
@@ -24,8 +24,10 @@ var _story_index := 0
 var _chat_index := 0
 var _board_timer := 0.0
 var _board_status := 0
-var _chat_timer := 20.0
+var _chat_timer := 15.0
 var _travel_left := 0.0
+var _travel_chat_index := 0
+var _last_ending := -1
 
 
 func _ready() -> void:
@@ -50,14 +52,17 @@ func _process(delta: float) -> void:
 		Stage.TRAVELLING:
 			_travel_left -= delta
 			_update_board()
+			var travel_chat := AndreyLines.CHAT_TRAVELLING
+			if _travel_chat_index < travel_chat.size() and _travel_left <= travel_chat[_travel_chat_index][0]:
+				GameState.post_chat(AndreyLines.NAME, travel_chat[_travel_chat_index][1])
+				_travel_chat_index += 1
 			if _travel_left <= 0.0:
 				_arrive()
 
 
 func _post_chat() -> void:
-	Sfx.play("chat", -4.0)
-	GameState.post_message(AndreyLines.CHAT[_chat_index])
-	_chat_index = (_chat_index + 1) % AndreyLines.CHAT.size()
+	GameState.post_chat(AndreyLines.NAME, AndreyLines.CHAT_WAITING[_chat_index])
+	_chat_index = (_chat_index + 1) % AndreyLines.CHAT_WAITING.size()
 
 
 func _update_board() -> void:
@@ -91,11 +96,16 @@ func _tell_story() -> void:
 	if _story_index >= AndreyLines.STORIES.size():
 		lines.append({"speaker": AndreyLines.SPEAKER, "text": AndreyLines.DEPARTURE, "call": _depart})
 	else:
-		lines.append({
-			"speaker": AndreyLines.SPEAKER,
-			"text": "В общем, сегодня не получится. Но я ещё позвоню.",
-		})
+		lines.append({"speaker": AndreyLines.SPEAKER, "text": _random_ending()})
 	Dialogue.start(lines)
+
+
+func _random_ending() -> String:
+	var index := randi() % AndreyLines.STORY_ENDINGS.size()
+	if index == _last_ending:
+		index = (index + 1) % AndreyLines.STORY_ENDINGS.size()
+	_last_ending = index
+	return AndreyLines.STORY_ENDINGS[index]
 
 
 func _depart() -> void:
@@ -135,6 +145,9 @@ func _on_andrey(_player: Player) -> void:
 			]],
 			["Это точно ты, а не голограмма?", [
 				{"speaker": speaker, "text": "Не знаю. Ущипни меня. Нет, не надо, у меня справка."},
+			]],
+			["Только пакеты из «Вкусно и точка» у кабинета не оставляй.", [
+				{"speaker": speaker, "text": "Это было ОДИН раз! И вообще там ещё Ярик с Костей были! Почему всегда я?!"},
 			]],
 		]},
 		{"speaker": speaker, "text": "Ладно, раз уж я здесь — отметьте меня. Пусть все видят."},

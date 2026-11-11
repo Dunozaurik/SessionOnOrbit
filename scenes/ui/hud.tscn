@@ -2,6 +2,19 @@
 
 [ext_resource type="Script" path="res://scripts/ui/hud.gd" id="1_hud"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_chat"]
+bg_color = Color(0.1, 0.12, 0.18, 0.95)
+border_width_left = 4
+border_color = Color(0.35, 0.85, 0.5, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
@@ -74,6 +87,52 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 18
 text = "Шпоры: 0 / 3"
+
+[node name="ChatCard" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -130.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_chat")
+
+[node name="Box" type="VBoxContainer" parent="ChatCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ChatHeader" type="Label" parent="ChatCard/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "ЧАТ ГРУППЫ  ·  сейчас"
+
+[node name="ChatAuthor" type="Label" parent="ChatCard/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Андрей Лабонин"
+
+[node name="ChatText" type="Label" parent="ChatCard/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_font_sizes/font_size = 17
+text = "Сообщение"
+autowrap_mode = 3
+
+[node name="ChatTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 7.0
+one_shot = true
 
 [node name="MessageTimer" type="Timer" parent="."]
 unique_name_in_owner = true

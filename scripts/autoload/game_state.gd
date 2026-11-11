@@ -4,18 +4,20 @@ extends Node
 ## подписи в зачётке, шпоры, флаги заданий и найденные пасхалки.
 
 signal message_posted(text: String)
+## Сообщение в «чат группы» — показывается уведомлением в углу экрана.
+signal chat_posted(author: String, text: String)
 signal signatures_changed(count: int, total: int)
 signal cheat_sheets_changed(count: int, total: int)
 signal easter_egg_found(id: String)
 
 const TOTAL_SIGNATURES := 5
-const TOTAL_CHEAT_SHEETS := 3
+const TOTAL_CHEAT_SHEETS := 4
 
 ## Все пасхалки игры: id -> [название, подсказка до нахождения].
 ## Журнал в меню паузы строится по этому списку.
 const EASTER_EGGS := {
 	"coffee_overdose": ["Кофейный передоз", "Кофе бесконечен. Ты — нет."],
-	"elevator": ["Лифт пришёл", "Настойчивость открывает любые двери. Даже лифта."],
+	"elevator": ["Пассажир 1957 года", "Настойчивость открывает любые двери. Даже лифта."],
 	"cheat_sheets": ["Отличник по шпорам", "Шпоры прячутся там, куда никто не смотрит."],
 	"andrey_stories": ["Пацаны, вы не поверите", "Кто-то на Гатчине-4 очень хочет выговориться."],
 	"andrey_arrived": ["Невозможное возможно", "Говорят, однажды он всё-таки доедет."],
@@ -61,6 +63,11 @@ func collect_cheat_sheet(text: String) -> void:
 
 func post_message(text: String) -> void:
 	message_posted.emit(text)
+
+
+func post_chat(author: String, text: String) -> void:
+	Sfx.play("chat", -4.0)
+	chat_posted.emit(author, text)
 
 
 func find_easter_egg(id: String) -> void:

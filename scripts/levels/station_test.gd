@@ -11,28 +11,22 @@ const COFFEE_LINES: Array[String] = [
 ]
 
 const ELEVATOR_LINES: Array[String] = [
-	"Лифт не работает с 2057 года. Ремонт запланирован на 2057 год.",
+	"Лифт не работает с 1957 года. Ремонт запланирован на завтра.",
 	"Кнопка нажалась. Это уже прогресс.",
-	"Из шахты доносится: «Ждите». Голос подозрительно похож на твой.",
+	"Из шахты доносится: «Ждите». Голос звучит очень, очень старым.",
 	"Ничего не происходит.",
 	"Ничего не происходит. Но уже настойчивее.",
 	"На кнопке появилась надпись: «ХВАТИТ».",
-	"Где-то наверху кто-то вздохнул.",
-	"Ничего не происходит. Совсем-совсем.",
-	"Кажется, лифт тоже на сессии.",
+	"Из шахты кто-то кашлянул. Кажется, там кто-то есть...",
+	"Где-то наверху заскрипели тросы. Впервые за сто лет.",
+	"Лифт дёрнулся. Ещё разок!",
 ]
 
-const SCHEDULES: Array[String] = [
-	"1 пара — Матанализ, ауд. 404. Аудитория не найдена.\n2 пара — Физика, ауд. 3¾ (вход через шлюз между 3 и 4).\n3 пара — Перенесена на вчера.",
-	"1 пара — Физкультура в невесомости. Форма одежды: скафандр.\n2 пара — Начертательная геометрия в 4D.\n3 пара — Окно. В космос. Не открывать.",
-	"ВНИМАНИЕ: расписание изменено.\nНовое расписание будет изменено.\nСледите за изменениями изменений.",
-	"1 пара — Программирование, ауд. 0x1F.\n2 пара — Сопромат. Сопротивление бесполезно.\n3 пара — Деканат. Явка обязательна. Причина: узнаешь на месте.",
-	"1 пара — Военная кафедра. Ауд. [ЗАСЕКРЕЧЕНО].\n2 пара — История космонавтики. Опоздавшие отправляются в историю.\n3 пара — Самостоятельная работа (самостоятельно найди аудиторию).",
-]
+## Студент, который застрял в лифте по дороге на вторую пару в 1957 году.
+const PETROV := "Студент Петров (набор 1957 г.)"
 
 var _coffee_cups := 0
 var _elevator_presses := 0
-var _schedule_index := 0
 
 
 func _ready() -> void:
@@ -41,7 +35,7 @@ func _ready() -> void:
 	$ProfZaglushkin.interacted.connect(_on_zaglushkin)
 	$ElevatorButton.interacted.connect(_on_elevator)
 	$ScheduleBoard.interacted.connect(_on_schedule)
-	$Ambience.finished.connect($Ambience.play)
+	$ElevatorStudent.interacted.connect(_on_petrov)
 	GameState.post_message("Смена началась. До конца сессии — одна смена. Удачи.")
 
 
@@ -95,16 +89,49 @@ func _on_elevator(_player: Player) -> void:
 		Sfx.play("denied", -4.0)
 		GameState.post_message(ELEVATOR_LINES[_elevator_presses - 1])
 		return
-	Sfx.play_at("ding", $ElevatorDoor.global_position)
-	Dialogue.start([
-		{"speaker": "", "text": "*дзынь*"},
-		{"speaker": "", "text": "Двери лифта открылись. Внутри никого. Двери закрылись."},
-		{"speaker": "", "text": "Ты решаешь сделать вид, что этого не было.", "call": GameState.find_easter_egg.bind("elevator")},
-	])
+	# Лифт наконец приехал: дверь отъезжает в сторону, внутри — Петров.
 	$ElevatorButton.enabled = false
-	$ElevatorSign.text = "ЛИФТ\nуехал навсегда"
+	Sfx.play_at("ding", $ElevatorDoor.global_position)
+	GameState.post_message("*дзынь* Лифт приехал. Впервые с 1957 года. И в нём кто-то есть...")
+	$ElevatorSign.text = "ЛИФТ\nприехал (впервые с 1957 г.)"
+	$ElevatorStudent.set_present(true)
+	var tween := create_tween()
+	tween.tween_property($ElevatorDoor, "position:z", $ElevatorDoor.position.z + 1.6, 1.2) \
+			.set_trans(Tween.TRANS_SINE)
+
+
+func _on_petrov(_player: Player) -> void:
+	if GameState.flags.get("petrov_talked", false):
+		Dialogue.start([{
+			"speaker": PETROV,
+			"text": "Я тут постою немного. Отвык от открытых пространств. И от людей. И от двадцать первого века.",
+		}])
+		return
+	GameState.flags["petrov_talked"] = true
+	Dialogue.start([
+		{"speaker": PETROV, "text": "Двери... открылись? ОТКРЫЛИСЬ! Товарищ, какой сейчас год?", "choices": [
+			["2057-й.", [
+				{"speaker": PETROV, "text": "Сто лет?! Я еду на вторую пару уже СТО ЛЕТ. Староста меня убьёт."},
+			]],
+			["А вы кто вообще?", [
+				{"speaker": PETROV, "text": "Петров. Первый курс, набор пятьдесят седьмого. Сел в лифт на вторую пару, а он застрял между этажами. Ну, я и решил подождать."},
+			]],
+			["Вы что, всё это время сидели в лифте?", [
+				{"speaker": PETROV, "text": "Так ремонт же обещали. К обеду. Обед, видимо, ещё не наступил."},
+			]],
+		]},
+		{
+			"speaker": PETROV,
+			"text": "Хорошо хоть шпору с собой взял. Держи — мне она уже не пригодится, а у тебя сессия.",
+			"call": GameState.collect_cheat_sheet.bind("4 октября 1957 — запущен первый спутник. Сам слышал, как он пищит, прямо через шахту лифта."),
+		},
+		{
+			"speaker": PETROV,
+			"text": "Ладно, побегу. Может, хоть на третью пару успею. По лестнице.",
+			"call": GameState.find_easter_egg.bind("elevator"),
+		},
+	])
 
 
 func _on_schedule(_player: Player) -> void:
-	Dialogue.start([{"speaker": "Расписание на сегодня", "text": SCHEDULES[_schedule_index]}])
-	_schedule_index = (_schedule_index + 1) % SCHEDULES.size()
+	Dialogue.start([{"speaker": "Расписание на сегодня", "text": ScheduleLines.generate()}])

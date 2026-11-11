@@ -8,4 +8,4 @@
 | Шрифт интерфейса по умолчанию | Шрифт | Встроен в Godot | Godot Engine contributors | MIT | Весь интерфейс |
 | icon.svg | Иконка | Создана самостоятельно | — | — | Иконка приложения |
 | Геометрия тестового отсека, заглушки объектов и NPC | 3D (примитивы) | Создано в Godot (CSG, BoxMesh, CapsuleMesh) | — | — | station_test.tscn, npc.tscn, cheat_sheet.tscn |
-| Звуки: click, interact, blip, pickup, egg, denied, ding, chat, shuttle, hum | Аудио (WAV) | Синтезированы скриптом `tools/generate_sfx.py` | — (собственные) | — | assets/audio/sfx, Sfx, фоновый гул отсека |
+| Звуки: click, interact, blip, pickup, egg, denied, ding, chat, shuttle | Аудио (WAV) | Синтезированы скриптом `tools/generate_sfx.py` | — (собственные) | — | assets/audio/sfx, автозагрузка Sfx |

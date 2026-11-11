@@ -11,5 +11,7 @@ func _ready() -> void:
 
 
 func _on_picked(_player: Player) -> void:
+	# Сначала выключаем, чтобы подсказка «[E] Подобрать» сразу исчезла.
+	enabled = false
 	GameState.collect_cheat_sheet(text)
 	queue_free()

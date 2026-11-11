@@ -79,20 +79,6 @@ def shuttle(dur=3.0):
     return out
 
 
-def hum(dur=4.0):
-    """Фоновый гул станции. Частоты кратны 1/dur, поэтому петля бесшовная."""
-    out, lp = [], 0.0
-    for i in range(int(RATE * dur)):
-        t = i / RATE
-        lfo = 0.85 + 0.15 * math.sin(2 * math.pi * t / dur)
-        s = (0.25 * math.sin(2 * math.pi * 55 * t)
-             + 0.12 * math.sin(2 * math.pi * 110 * t)
-             + 0.05 * math.sin(2 * math.pi * 165 * t))
-        lp += 0.05 * (random.uniform(-1, 1) - lp)
-        out.append((s * lfo + lp * 0.25) * 0.8)
-    return out
-
-
 def main():
     save("click", tone(1400, 0.04, 0.35, attack=0.001, decay=0.01))
     save("interact", concat(tone(660, 0.06, 0.3, "tri"), tone(990, 0.08, 0.3, "tri")))
@@ -120,7 +106,6 @@ def main():
         tone(2000, 0.07, 0.25, attack=0.002, decay=0.04),
     ))
     save("shuttle", shuttle())
-    save("hum", hum())
 
 
 if __name__ == "__main__":

@@ -12,6 +12,7 @@ signal focus_changed(target: Interactable)
 
 var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var _focused: Interactable
+var _has_focus := false
 
 @onready var _head: Node3D = $Head
 @onready var _ray: RayCast3D = $Head/Camera3D/InteractRay
@@ -59,8 +60,11 @@ func _physics_process(delta: float) -> void:
 
 func _update_focus() -> void:
 	var target := _ray.get_collider() as Interactable
-	if target and not target.enabled:
+	if target and (not target.enabled or target.is_queued_for_deletion()):
 		target = null
-	if target != _focused:
+	# Объект, на который смотрели, мог быть удалён (подобранная шпора) — тогда тоже сообщаем о смене.
+	var focused_lost := _has_focus and not is_instance_valid(_focused)
+	if target != _focused or focused_lost:
 		_focused = target
+		_has_focus = target != null
 		focus_changed.emit(_focused)
