@@ -2,7 +2,7 @@ extends Control
 
 ## Главное меню. Подзаголовок каждый раз выбирается случайно — первая мелкая пасхалка.
 
-const FIRST_LEVEL := "res://scenes/levels/station_test.tscn"
+const FIRST_LEVEL := "res://scenes/levels/atrium.tscn"
 
 const TAGLINES: Array[String] = [
 	"В космосе никто не услышит, как ты не сдал курсовую.",
@@ -18,6 +18,7 @@ const TAGLINES: Array[String] = [
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	AndreyTrip.active = false
 	%Tagline.text = TAGLINES.pick_random()
 	%StartButton.pressed.connect(_on_start)
 	%QuitButton.pressed.connect(get_tree().quit)
@@ -26,4 +27,4 @@ func _ready() -> void:
 
 func _on_start() -> void:
 	GameState.reset()
-	get_tree().change_scene_to_file(FIRST_LEVEL)
+	Transition.go(FIRST_LEVEL)

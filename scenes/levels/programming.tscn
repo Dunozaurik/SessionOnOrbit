@@ -1,0 +1,259 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/levels/programming.gd" id="1_level"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="5_interactable"]
+[ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="6_npc"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="7_door"]
+[ext_resource type="PackedScene" path="res://scenes/ui/code_puzzle.tscn" id="8_puzzle"]
+[ext_resource type="Script" path="res://scripts/props/star_window.gd" id="9_stars"]
+[ext_resource type="PackedScene" path="res://scenes/props/desk.tscn" id="10_desk"]
+
+[sub_resource type="Environment" id="Environment_class"]
+background_mode = 1
+background_color = Color(0.02, 0.02, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.5, 0.6, 0.75, 1)
+ambient_light_energy = 0.45
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_floor"]
+albedo_color = Color(0.22, 0.26, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_wall"]
+albedo_color = Color(0.78, 0.84, 0.86, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_desk"]
+albedo_color = Color(0.62, 0.5, 0.36, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_monitor"]
+albedo_color = Color(0.05, 0.08, 0.12, 1)
+emission_enabled = true
+emission = Color(0.25, 0.5, 1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_compiler"]
+albedo_color = Color(0.02, 0.08, 0.04, 1)
+emission_enabled = true
+emission = Color(0.25, 1, 0.45, 1)
+emission_energy_multiplier = 1.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_window"]
+albedo_color = Color(0.01, 0.01, 0.04, 1)
+metallic = 0.8
+roughness = 0.1
+
+[sub_resource type="BoxMesh" id="Mesh_monitor"]
+material = SubResource("Mat_monitor")
+size = Vector3(0.8, 0.5, 0.06)
+
+[sub_resource type="BoxShape3D" id="Shape_monitor"]
+size = Vector3(0.9, 0.6, 0.3)
+
+[sub_resource type="BoxMesh" id="Mesh_compiler"]
+material = SubResource("Mat_compiler")
+size = Vector3(2.6, 1.5, 0.15)
+
+[sub_resource type="BoxShape3D" id="Shape_compiler"]
+size = Vector3(2.6, 1.5, 0.3)
+
+[sub_resource type="BoxShape3D" id="Shape_semicolon"]
+size = Vector3(0.7, 0.6, 0.7)
+
+[node name="Programming" type="Node3D"]
+script = ExtResource("1_level")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_class")
+
+[node name="LightFront" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -2.5)
+light_color = Color(0.85, 0.95, 1, 1)
+shadow_enabled = true
+omni_range = 10.0
+
+[node name="LightBack" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 3)
+light_color = Color(1, 0.93, 0.85, 1)
+light_energy = 0.8
+shadow_enabled = true
+omni_range = 10.0
+
+[node name="Geometry" type="Node3D" parent="."]
+
+[node name="Floor" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+use_collision = true
+size = Vector3(14, 0.5, 12)
+material = SubResource("Mat_floor")
+
+[node name="Ceiling" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+use_collision = true
+size = Vector3(14, 0.5, 12)
+material = SubResource("Mat_wall")
+
+[node name="WallNorth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, -6)
+use_collision = true
+size = Vector3(14, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallSouth" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 6)
+use_collision = true
+size = Vector3(14, 3.5, 0.5)
+material = SubResource("Mat_wall")
+
+[node name="WallEast" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.75, 0)
+use_collision = true
+size = Vector3(0.5, 3.5, 12)
+material = SubResource("Mat_wall")
+
+[node name="WallWest" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.75, 0)
+use_collision = true
+size = Vector3(0.5, 3.5, 12)
+material = SubResource("Mat_wall")
+
+[node name="Window" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.74, 1.8, 0)
+size = Vector3(0.02, 1.4, 5)
+material = SubResource("Mat_window")
+
+[node name="TeacherDesk" type="CSGBox3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.4, -4)
+use_collision = true
+size = Vector3(2.4, 0.8, 1)
+material = SubResource("Mat_desk")
+
+[node name="DeskA1" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(-4, 0, -1.5)
+
+[node name="DeskA2" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(0, 0, -1.5)
+
+[node name="DeskA3" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(4, 0, -1.5)
+
+[node name="DeskB1" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(-4, 0, 1.3)
+
+[node name="DeskB2" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(0, 0, 1.3)
+
+[node name="DeskB3" parent="Geometry" instance=ExtResource("10_desk")]
+position = Vector3(4, 0, 1.3)
+
+[node name="MonitorA1" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.0, -1.7)
+mesh = SubResource("Mesh_monitor")
+
+[node name="MonitorA2" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, -1.7)
+mesh = SubResource("Mesh_monitor")
+
+[node name="MonitorA3" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.0, -1.7)
+mesh = SubResource("Mesh_monitor")
+
+[node name="MonitorB1" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.0, 1.1)
+mesh = SubResource("Mesh_monitor")
+
+[node name="MonitorB2" type="MeshInstance3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 1.1)
+mesh = SubResource("Mesh_monitor")
+
+[node name="WindowStars" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.72, 1.8, 0)
+script = ExtResource("9_stars")
+size = Vector2(4.8, 1.3)
+
+[node name="WindowLabel" type="Label3D" parent="."]
+position = Vector3(6.7, 2.75, 0)
+rotation = Vector3(0, -1.5708, 0)
+text = "ИЛЛЮМИНАТОР
+(для тех самых 10%)"
+font_size = 28
+outline_size = 8
+
+[node name="SomeonesPC" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.0, 1.1)
+script = ExtResource("5_interactable")
+prompt = "Заглянуть в чужой компьютер"
+
+[node name="Mesh" type="MeshInstance3D" parent="SomeonesPC"]
+mesh = SubResource("Mesh_monitor")
+
+[node name="Collision" type="CollisionShape3D" parent="SomeonesPC"]
+shape = SubResource("Shape_monitor")
+
+[node name="CompilerTerminal" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1.6, -5.65)
+script = ExtResource("5_interactable")
+prompt = "Терминал компилятора"
+
+[node name="Mesh" type="MeshInstance3D" parent="CompilerTerminal"]
+mesh = SubResource("Mesh_compiler")
+
+[node name="Collision" type="CollisionShape3D" parent="CompilerTerminal"]
+shape = SubResource("Shape_compiler")
+
+[node name="CompilerLabel" type="Label3D" parent="."]
+position = Vector3(-3.5, 2.75, -5.6)
+text = "КОМПИЛЯТОР СТАНЦИИ"
+font_size = 32
+outline_size = 8
+
+[node name="Syntaksisov" parent="." instance=ExtResource("6_npc")]
+position = Vector3(1.8, 0, -5)
+display_name = "Ст. преп. Синтаксисов"
+subtitle = "(программирование)"
+color = Color(0.35, 0.5, 0.85, 1)
+
+[node name="Semicolon" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3, 0, 1.3)
+script = ExtResource("5_interactable")
+prompt = "Подобрать точку с запятой"
+
+[node name="Glyph" type="Label3D" parent="Semicolon"]
+position = Vector3(0, 0.015, 0)
+rotation = Vector3(-1.5708, 0.35, 0)
+modulate = Color(1, 0.85, 0.2, 1)
+text = ";"
+font_size = 90
+outline_size = 14
+
+[node name="Glow" type="OmniLight3D" parent="Semicolon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+light_color = Color(1, 0.85, 0.3, 1)
+omni_range = 1.4
+
+[node name="Collision" type="CollisionShape3D" parent="Semicolon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("Shape_semicolon")
+
+[node name="ExitDoor" parent="." instance=ExtResource("7_door")]
+position = Vector3(0, 0, 5.65)
+rotation = Vector3(0, 3.14159, 0)
+title = "АТРИУМ"
+target_scene = "res://scenes/levels/atrium.tscn"
+spawn_id = "FromProgramming"
+prompt = "Выйти в атриум"
+
+[node name="FromAtrium" type="Marker3D" parent="." groups=["spawn"]]
+position = Vector3(0, 0, 4)
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("4_pause")]
+
+[node name="CodePuzzle" parent="." instance=ExtResource("8_puzzle")]

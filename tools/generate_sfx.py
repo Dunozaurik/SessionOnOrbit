@@ -79,6 +79,18 @@ def shuttle(dur=3.0):
     return out
 
 
+def airlock(dur=0.7):
+    """Шипение открывающегося шлюза: шум с быстрой атакой и затуханием + низкий «тук»."""
+    out, lp = [], 0.0
+    for i in range(int(RATE * dur)):
+        t = i / RATE
+        env = min(1.0, t / 0.02) * math.exp(-t / 0.22)
+        lp += 0.35 * (random.uniform(-1, 1) - lp)
+        thump = math.sin(2 * math.pi * 70 * t) * math.exp(-t / 0.06)
+        out.append((lp * 0.9 + thump * 0.6) * env * 0.7)
+    return out
+
+
 def main():
     save("click", tone(1400, 0.04, 0.35, attack=0.001, decay=0.01))
     save("interact", concat(tone(660, 0.06, 0.3, "tri"), tone(990, 0.08, 0.3, "tri")))
@@ -106,6 +118,12 @@ def main():
         tone(2000, 0.07, 0.25, attack=0.002, decay=0.04),
     ))
     save("shuttle", shuttle())
+    save("door", airlock())
+    save("success", concat(
+        tone(784, 0.08, 0.25, "tri"),
+        tone(1047, 0.08, 0.25, "tri"),
+        tone(1319, 0.3, 0.28, "tri", decay=0.12),
+    ))
 
 
 if __name__ == "__main__":

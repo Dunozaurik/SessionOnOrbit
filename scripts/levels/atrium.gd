@@ -1,7 +1,9 @@
-extends Node3D
+extends Room
 
-## Атриум Орбитмеха (прототип): проверка управления, диалогов, зачётки и пасхалок
-## до того, как появится настоящая станция. Сюжетка Андрея — в andrey_storyline.gd.
+## Атриум Орбитмеха — центральный хаб станции. Отсюда двери ведут во все отсеки.
+## Здесь же Заглушкин, кофемашина, лифт с Петровым, расписание и док с Андреем
+## (сюжетка Андрея — в andrey_storyline.gd). Состояние хранится в GameState.flags,
+## чтобы не сбрасываться при возвращении из отсеков.
 
 const COFFEE_LINES: Array[String] = [
 	"Кофе. Горячий. Почти как дедлайн.",
@@ -21,32 +23,50 @@ const ELEVATOR_LINES: Array[String] = [
 	"Где-то наверху заскрипели тросы. Впервые за сто лет.",
 	"Лифт дёрнулся. Ещё разок!",
 ]
+const ELEVATOR_DOOR_SHIFT := 1.6
 
+const ZAGLUSHKIN := "Проф. Заглушкин"
 ## Студент, который застрял в лифте по дороге на вторую пару в 1957 году.
 const PETROV := "Студент Петров (набор 1957 г.)"
 
-var _coffee_cups := 0
-var _elevator_presses := 0
-
 
 func _ready() -> void:
+	super._ready()
 	$MoodleTerminal.interacted.connect(_on_moodle)
 	$CoffeeMachine.interacted.connect(_on_coffee)
 	$ProfZaglushkin.interacted.connect(_on_zaglushkin)
 	$ElevatorButton.interacted.connect(_on_elevator)
 	$ScheduleBoard.interacted.connect(_on_schedule)
 	$ElevatorStudent.interacted.connect(_on_petrov)
-	GameState.post_message("Смена началась. До конца сессии — одна смена. Удачи.")
+	_restore_state()
+	if not GameState.flags.get("shift_started", false):
+		GameState.flags["shift_started"] = true
+		GameState.post_message("Смена началась. Собери %d подписей в зачётку и сдай её в деканат." % GameState.TOTAL_SIGNATURES)
+
+
+## Возвращает атриум в то состояние, в котором его оставили.
+func _restore_state() -> void:
+	$CoffeeMachine.enabled = GameState.flags.get("coffee_cups", 0) <= COFFEE_LINES.size()
+	if GameState.flags.get("elevator_open", false):
+		$ElevatorButton.enabled = false
+		$ElevatorDoor.position.z += ELEVATOR_DOOR_SHIFT
+		$ElevatorSign.text = "ЛИФТ\nприехал (впервые с 1957 г.)"
+		$ElevatorStudent.set_present(true)
 
 
 func _on_moodle(_player: Player) -> void:
-	GameState.post_message("MOODLE: У вас 5 несданных работ. Срок сдачи: вчера.")
+	var left := GameState.TOTAL_SIGNATURES - GameState.signatures.size()
+	if left > 0:
+		GameState.post_message("MOODLE: У вас %d незакрытых предметов. Срок сдачи: вчера." % left)
+	else:
+		GameState.post_message("MOODLE: Все предметы закрыты. Ошибка: такого не бывает. Перезагрузка...")
 
 
 func _on_coffee(_player: Player) -> void:
-	_coffee_cups += 1
-	if _coffee_cups <= COFFEE_LINES.size():
-		GameState.post_message(COFFEE_LINES[_coffee_cups - 1])
+	var cups: int = GameState.flags.get("coffee_cups", 0) + 1
+	GameState.flags["coffee_cups"] = cups
+	if cups <= COFFEE_LINES.size():
+		GameState.post_message(COFFEE_LINES[cups - 1])
 	else:
 		GameState.find_easter_egg("coffee_overdose")
 		GameState.post_message("Пятая чашка. Ты видишь звуки. Кофемашина отказывается с тобой работать.")
@@ -54,29 +74,32 @@ func _on_coffee(_player: Player) -> void:
 
 
 func _on_zaglushkin(_player: Player) -> void:
-	const SPEAKER := "Проф. Заглушкин"
 	if GameState.has_signature("zaglushkin"):
 		Dialogue.start([{
-			"speaker": SPEAKER,
-			"text": "Я уже расписался. Я вообще временный, не задерживай. Остальные преподаватели ещё не загрузились.",
+			"speaker": ZAGLUSHKIN,
+			"text": "Я уже расписался. Остальные преподаватели сидят по отсекам — двери по периметру атриума. Иди, не задерживай временного человека.",
 		}])
 		return
 	var sign_line := {
-		"speaker": SPEAKER,
+		"speaker": ZAGLUSHKIN,
 		"text": "Ладно, подпишу, раз я пока капсула. Но модельку мне потом нормальную сделай!",
 		"call": GameState.add_signature.bind("zaglushkin"),
 	}
 	Dialogue.start([
-		{"speaker": SPEAKER, "text": "А, студент. Я тут временно — пока мне не сделали нормальную модель. Ты за подписью?", "choices": [
+		{"speaker": ZAGLUSHKIN, "text": "А, студент. Я тут временно — пока мне не сделали нормальную модель. Ты за подписью?", "choices": [
 			["Да, распишитесь, пожалуйста.", [sign_line]],
 			["А почему вы капсула?", [
-				{"speaker": SPEAKER, "text": "Это называется «заглушка», молодой человек. Перечитай требования ко второму этапу курсового проекта."},
-				{"speaker": SPEAKER, "text": "Стоп. Какого ещё курсового проекта? Я ничего не говорил.", "choices": [
+				{"speaker": ZAGLUSHKIN, "text": "Это называется «заглушка», молодой человек. Перечитай требования ко второму этапу курсового проекта."},
+				{"speaker": ZAGLUSHKIN, "text": "Стоп. Какого ещё курсового проекта? Я ничего не говорил.", "choices": [
 					["...Так вы подпишете?", [sign_line]],
 				]},
 			]],
 			["Можно автоматом?", [
-				{"speaker": SPEAKER, "text": "Автоматом? Ха. Ха-ха. Автоматы на третьей палубе, там газировку продают."},
+				{
+					"speaker": ZAGLUSHKIN,
+					"text": "Автоматом? Ха. Ха-ха. Автоматы в деканате, там газировку продают.",
+					"call": func(): GameState.flags["asked_automat"] = true,
+				},
 				sign_line,
 			]],
 		]},
@@ -84,19 +107,20 @@ func _on_zaglushkin(_player: Player) -> void:
 
 
 func _on_elevator(_player: Player) -> void:
-	_elevator_presses += 1
-	if _elevator_presses <= ELEVATOR_LINES.size():
+	var presses: int = GameState.flags.get("elevator_presses", 0) + 1
+	GameState.flags["elevator_presses"] = presses
+	if presses <= ELEVATOR_LINES.size():
 		Sfx.play("denied", -4.0)
-		GameState.post_message(ELEVATOR_LINES[_elevator_presses - 1])
+		GameState.post_message(ELEVATOR_LINES[presses - 1])
 		return
 	# Лифт наконец приехал: дверь отъезжает в сторону, внутри — Петров.
+	GameState.flags["elevator_open"] = true
 	$ElevatorButton.enabled = false
 	Sfx.play_at("ding", $ElevatorDoor.global_position)
 	GameState.post_message("*дзынь* Лифт приехал. Впервые с 1957 года. И в нём кто-то есть...")
 	$ElevatorSign.text = "ЛИФТ\nприехал (впервые с 1957 г.)"
 	$ElevatorStudent.set_present(true)
-	var tween := create_tween()
-	tween.tween_property($ElevatorDoor, "position:z", $ElevatorDoor.position.z + 1.6, 1.2) \
+	create_tween().tween_property($ElevatorDoor, "position:z", $ElevatorDoor.position.z + ELEVATOR_DOOR_SHIFT, 1.2) \
 			.set_trans(Tween.TRANS_SINE)
 
 
@@ -123,7 +147,7 @@ func _on_petrov(_player: Player) -> void:
 		{
 			"speaker": PETROV,
 			"text": "Хорошо хоть шпору с собой взял. Держи — мне она уже не пригодится, а у тебя сессия.",
-			"call": GameState.collect_cheat_sheet.bind("4 октября 1957 — запущен первый спутник. Сам слышал, как он пищит, прямо через шахту лифта."),
+			"call": GameState.collect_cheat_sheet.bind("petrov", "4 октября 1957 — запущен первый спутник. Сам слышал, как он пищит, прямо через шахту лифта."),
 		},
 		{
 			"speaker": PETROV,

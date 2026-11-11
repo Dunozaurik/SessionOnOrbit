@@ -24,8 +24,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Во время диалога ввод забирает окно диалога.
-	if Dialogue.is_active():
+	# Во время диалога или головоломки ввод забирает открытое окно.
+	if _is_busy():
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
@@ -43,11 +43,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= _gravity * delta
-	elif Input.is_action_just_pressed("jump") and not Dialogue.is_active():
+	elif Input.is_action_just_pressed("jump") and not _is_busy():
 		velocity.y = jump_velocity
 
 	var input := Vector2.ZERO
-	if not Dialogue.is_active():
+	if not _is_busy():
 		input = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 	var direction := (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
 	var speed := sprint_speed if Input.is_action_pressed("sprint") else walk_speed
@@ -56,6 +56,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 	_update_focus()
+
+
+func _is_busy() -> bool:
+	return Dialogue.is_active() or GameState.input_locked
 
 
 func _update_focus() -> void:

@@ -1,0 +1,66 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/interaction/door.gd" id="1_door"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_frame"]
+albedo_color = Color(0.25, 0.28, 0.34, 1)
+metallic = 0.4
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_panel"]
+albedo_color = Color(0.45, 0.55, 0.7, 1)
+metallic = 0.3
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_stripe"]
+albedo_color = Color(0.95, 0.75, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_frame"]
+material = SubResource("Mat_frame")
+size = Vector3(2.2, 3, 0.2)
+
+[sub_resource type="BoxMesh" id="Mesh_panel"]
+material = SubResource("Mat_panel")
+size = Vector3(1.6, 2.5, 0.1)
+
+[sub_resource type="BoxMesh" id="Mesh_stripe"]
+material = SubResource("Mat_stripe")
+size = Vector3(1.6, 0.12, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_light"]
+size = Vector3(0.5, 0.08, 0.05)
+
+[sub_resource type="BoxShape3D" id="Shape_door"]
+size = Vector3(2.2, 3, 0.4)
+
+[node name="Door" type="StaticBody3D"]
+script = ExtResource("1_door")
+prompt = "Войти"
+
+[node name="Frame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("Mesh_frame")
+
+[node name="Panel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.12)
+mesh = SubResource("Mesh_panel")
+
+[node name="Stripe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.18)
+mesh = SubResource("Mesh_stripe")
+
+[node name="Light" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.12)
+mesh = SubResource("Mesh_light")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.1)
+shape = SubResource("Shape_door")
+
+[node name="Sign" type="Label3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0.12)
+text = "ОТСЕК"
+font_size = 72
+outline_size = 14

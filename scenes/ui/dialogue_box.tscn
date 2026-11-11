@@ -33,10 +33,12 @@ offset_right = -120.0
 offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_panel")
 
 [node name="Box" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 8
 
 [node name="Speaker" type="Label" parent="Panel/Box"]
@@ -57,6 +59,7 @@ autowrap_mode = 3
 [node name="Choices" type="VBoxContainer" parent="Panel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 
 [node name="Hint" type="Label" parent="Panel/Box"]
 unique_name_in_owner = true

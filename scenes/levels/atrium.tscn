@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/levels/station_test.gd" id="1_level"]
+[ext_resource type="Script" path="res://scripts/levels/atrium.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="4_pause"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/npc/npc.tscn" id="6_npc"]
 [ext_resource type="PackedScene" path="res://scenes/props/cheat_sheet.tscn" id="7_sheet"]
 [ext_resource type="Script" path="res://scripts/levels/andrey_storyline.gd" id="8_andrey"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="9_door"]
 
 [sub_resource type="Environment" id="Environment_station"]
 background_mode = 1
@@ -105,114 +106,201 @@ size = Vector3(3, 1.6, 0.1)
 [sub_resource type="BoxShape3D" id="Shape_schedule"]
 size = Vector3(3, 1.6, 0.2)
 
-[node name="StationTest" type="Node3D"]
+[node name="Atrium" type="Node3D"]
 script = ExtResource("1_level")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_station")
 
-[node name="LightA" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 3, -2)
+[node name="LightNW" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.2, -6)
 light_color = Color(0.9, 0.95, 1, 1)
-light_energy = 1.1
 shadow_enabled = true
-omni_range = 12.0
+omni_range = 13.0
 
-[node name="LightB" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 4)
-light_color = Color(1, 0.9, 0.8, 1)
-light_energy = 0.8
+[node name="LightNE" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.2, -6)
+light_color = Color(0.9, 0.95, 1, 1)
 shadow_enabled = true
-omni_range = 12.0
+omni_range = 13.0
 
-[node name="LightDock" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 3, 1)
-light_color = Color(1, 0.72, 0.4, 1)
+[node name="LightSW" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 3.2, 6)
+light_color = Color(1, 0.92, 0.82, 1)
 light_energy = 0.9
 shadow_enabled = true
-omni_range = 8.0
+omni_range = 13.0
+
+[node name="LightSE" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 3.2, 6)
+light_color = Color(1, 0.92, 0.82, 1)
+light_energy = 0.9
+shadow_enabled = true
+omni_range = 13.0
+
+[node name="LightDock" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 3, 2)
+light_color = Color(1, 0.72, 0.4, 1)
+light_energy = 0.8
+omni_range = 7.0
 
 [node name="Geometry" type="Node3D" parent="."]
 
 [node name="Floor" type="CSGBox3D" parent="Geometry"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 use_collision = true
-size = Vector3(16, 0.5, 16)
+size = Vector3(24, 0.5, 24)
 material = SubResource("Mat_floor")
 
 [node name="Ceiling" type="CSGBox3D" parent="Geometry"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, 0)
 use_collision = true
-size = Vector3(16, 0.5, 16)
+size = Vector3(24, 0.5, 24)
 material = SubResource("Mat_wall")
 
 [node name="WallNorth" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -12)
 use_collision = true
-size = Vector3(16, 4, 0.5)
+size = Vector3(24, 4, 0.5)
 material = SubResource("Mat_wall")
 
 [node name="WallSouth" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 12)
 use_collision = true
-size = Vector3(16, 4, 0.5)
+size = Vector3(24, 4, 0.5)
 material = SubResource("Mat_wall")
 
 [node name="WallEast" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2, 0)
 use_collision = true
-size = Vector3(0.5, 4, 16)
+size = Vector3(0.5, 4, 24)
 material = SubResource("Mat_wall")
 
 [node name="WallWest" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2, 0)
 use_collision = true
-size = Vector3(0.5, 4, 16)
+size = Vector3(0.5, 4, 24)
 material = SubResource("Mat_wall")
 
 [node name="DockHatch" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.7, 1.25, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7, 1.25, 3)
 use_collision = true
 size = Vector3(0.3, 2.5, 2.2)
 material = SubResource("Mat_hatch")
 
 [node name="DockBoardPanel" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.72, 3.2, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.72, 3.2, 3)
 size = Vector3(0.1, 0.8, 3.6)
 material = SubResource("Mat_board")
 
 [node name="ElevatorInside" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.74, 1.25, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.74, 1.25, 3)
 size = Vector3(0.01, 2.5, 1.6)
 material = SubResource("Mat_elevator_inside")
 
+[node name="Doors" type="Node3D" parent="."]
+
+[node name="MathDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(-7, 0, -11.65)
+title = "ВЫСШАЯ МАТЕМАТИКА"
+locked = true
+locked_message = "Кафедра высшей математики на ремонте: её ещё не построили. Приходите в следующем обновлении."
+
+[node name="DeaneryDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(0, 0, -11.65)
+title = "ДЕКАНАТ"
+locked = true
+locked_message = "Деканат принимает зачётки только с 6 подписями. Часы приёма: 14:00–14:05, обед с 14:01."
+
+[node name="FomDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(7, 0, -11.65)
+title = "ФОМ"
+locked = true
+locked_message = "Аудитория ФОМ закрыта: идёт тест в Moodle. Уже третий год."
+
+[node name="PhysicsDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(-7, 0, 11.65)
+rotation = Vector3(0, 3.14159, 0)
+title = "ФИЗИКА"
+locked = true
+locked_message = "Лаборатория физики закрыта: там отключилась гравитация. Ждём, пока всё упадёт."
+
+[node name="ProgrammingDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(7, 0, 11.65)
+rotation = Vector3(0, 3.14159, 0)
+title = "ПРОГРАММИРОВАНИЕ"
+target_scene = "res://scenes/levels/programming.tscn"
+spawn_id = "FromAtrium"
+
+[node name="BzhdDoor" parent="Doors" instance=ExtResource("9_door")]
+position = Vector3(11.65, 0, -7)
+rotation = Vector3(0, -1.5708, 0)
+title = "БЖД · ШЛЮЗ"
+locked = true
+locked_message = "Шлюз БЖД закрыт. Инструктор проверяет, достаточно ли он перестраховался."
+
+[node name="Spawns" type="Node3D" parent="."]
+
+[node name="FromProgramming" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(7, 0, 9.8)
+
+[node name="FromPhysics" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(-7, 0, 9.8)
+
+[node name="FromMath" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(-7, 0, -9.8)
+rotation = Vector3(0, 3.14159, 0)
+
+[node name="FromDeanery" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(0, 0, -9.8)
+rotation = Vector3(0, 3.14159, 0)
+
+[node name="FromFom" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(7, 0, -9.8)
+rotation = Vector3(0, 3.14159, 0)
+
+[node name="FromBzhd" type="Marker3D" parent="Spawns" groups=["spawn"]]
+position = Vector3(9.8, 0, -7)
+rotation = Vector3(0, 1.5708, 0)
+
 [node name="ElevatorDoor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.7, 1.25, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7, 1.25, 3)
 use_collision = true
 size = Vector3(0.3, 2.5, 1.6)
 material = SubResource("Mat_metal")
 
-[node name="ElevatorStudent" parent="." instance=ExtResource("6_npc")]
-position = Vector3(-6.9, 0, 2)
-rotation = Vector3(0, 1.5708, 0)
-display_name = "Студент Петров"
-subtitle = "(едет на 2-ю пару с 1957 г.)"
-color = Color(0.72, 0.62, 0.45, 1)
-present = false
-
 [node name="ElevatorSign" type="Label3D" parent="."]
-position = Vector3(-7.5, 2.8, 2)
+position = Vector3(-11.5, 2.8, 3)
 rotation = Vector3(0, 1.5708, 0)
 text = "ЛИФТ
 не работает с 1957 г."
 font_size = 32
 outline_size = 8
 
+[node name="ElevatorButton" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.75, 1.2, 1.8)
+script = ExtResource("5_interactable")
+prompt = "Вызвать лифт"
+
+[node name="Mesh" type="MeshInstance3D" parent="ElevatorButton"]
+mesh = SubResource("Mesh_button")
+
+[node name="Collision" type="CollisionShape3D" parent="ElevatorButton"]
+shape = SubResource("Shape_button")
+
+[node name="ElevatorStudent" parent="." instance=ExtResource("6_npc")]
+position = Vector3(-10.9, 0, 3)
+rotation = Vector3(0, 1.5708, 0)
+display_name = "Студент Петров"
+subtitle = "(едет на 2-ю пару с 1957 г.)"
+color = Color(0.72, 0.62, 0.45, 1)
+present = false
+
 [node name="Player" parent="." instance=ExtResource("2_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
 
 [node name="MoodleTerminal" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.8, -11.5)
 script = ExtResource("5_interactable")
 prompt = "Открыть Moodle"
 
@@ -223,7 +311,7 @@ mesh = SubResource("Mesh_terminal")
 shape = SubResource("Shape_terminal")
 
 [node name="CoffeeMachine" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0.6, -6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 0.6, -10.8)
 script = ExtResource("5_interactable")
 prompt = "Налить кофе"
 
@@ -234,23 +322,12 @@ mesh = SubResource("Mesh_coffee")
 shape = SubResource("Shape_coffee")
 
 [node name="ProfZaglushkin" parent="." instance=ExtResource("6_npc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
 display_name = "Проф. Заглушкин"
 subtitle = "(временная модель)"
 
-[node name="ElevatorButton" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.75, 1.2, 0.8)
-script = ExtResource("5_interactable")
-prompt = "Вызвать лифт"
-
-[node name="Mesh" type="MeshInstance3D" parent="ElevatorButton"]
-mesh = SubResource("Mesh_button")
-
-[node name="Collision" type="CollisionShape3D" parent="ElevatorButton"]
-shape = SubResource("Shape_button")
-
 [node name="ScheduleBoard" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 7.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 11.7)
 script = ExtResource("5_interactable")
 prompt = "Посмотреть расписание"
 
@@ -261,7 +338,7 @@ mesh = SubResource("Mesh_schedule")
 shape = SubResource("Shape_schedule")
 
 [node name="ScheduleLabel" type="Label3D" parent="."]
-position = Vector3(0, 1.8, 7.6)
+position = Vector3(0, 1.8, 11.6)
 rotation = Vector3(0, 3.14159, 0)
 text = "РАСПИСАНИЕ
 (посмотри, если не страшно)"
@@ -269,7 +346,7 @@ font_size = 40
 outline_size = 8
 
 [node name="GatchinaTerminal" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.8, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.8, -1.5)
 script = ExtResource("5_interactable")
 prompt = "Связь с Гатчиной-4"
 
@@ -280,14 +357,14 @@ mesh = SubResource("Mesh_radio")
 shape = SubResource("Shape_radio")
 
 [node name="GatchinaLabel" type="Label3D" parent="."]
-position = Vector3(7.25, 1.9, -2)
+position = Vector3(11.25, 1.9, -1.5)
 rotation = Vector3(0, -1.5708, 0)
 text = "СВЯЗЬ С ГАТЧИНОЙ-4"
 font_size = 28
 outline_size = 8
 
 [node name="DockBoard" type="Label3D" parent="."]
-position = Vector3(7.62, 3.2, 2)
+position = Vector3(11.62, 3.2, 3)
 rotation = Vector3(0, -1.5708, 0)
 modulate = Color(1, 0.7, 0.25, 1)
 text = "ШАТТЛ  ГАТЧИНА-4 — ОРБИТМЕХ
@@ -295,34 +372,33 @@ text = "ШАТТЛ  ГАТЧИНА-4 — ОРБИТМЕХ
 font_size = 30
 outline_size = 0
 
-[node name="DockPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4, 1.2, 2)
-
 [node name="Andrey" parent="." instance=ExtResource("6_npc")]
-position = Vector3(6.6, 0, 2)
+position = Vector3(10.6, 0, 3)
 rotation = Vector3(0, -1.5708, 0)
 display_name = "Андрей Лабонин"
 subtitle = "(доехал?!)"
 color = Color(0.35, 0.75, 0.45, 1)
 present = false
 
-[node name="AndreyStoryline" type="Node" parent="." node_paths=PackedStringArray("terminal", "board", "andrey", "dock_point")]
+[node name="AndreyStoryline" type="Node" parent="." node_paths=PackedStringArray("terminal", "board", "andrey")]
 script = ExtResource("8_andrey")
 terminal = NodePath("../GatchinaTerminal")
 board = NodePath("../DockBoard")
 andrey = NodePath("../Andrey")
-dock_point = NodePath("../DockPoint")
 
 [node name="SheetCorner" parent="." instance=ExtResource("7_sheet")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0, 6.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.2, 0, 11.2)
+id = "atrium_corner"
 text = "sin²x + cos²x = 1. Всегда. Даже в космосе."
 
 [node name="SheetDock" parent="." instance=ExtResource("7_sheet")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.9, 0, -7.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2, 0, -11.2)
+id = "atrium_dock"
 text = "Не знаешь ответ — пиши «очевидно». Работает в 50% случаев."
 
 [node name="SheetElevator" parent="." instance=ExtResource("7_sheet")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.3, 0, 3.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.3, 0, 5.4)
+id = "atrium_elevator"
 text = "Если лифт не едет — это не ты сломал. Он всегда такой."
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]

@@ -22,7 +22,7 @@ func toggle() -> void:
 	var paused := not get_tree().paused
 	get_tree().paused = paused
 	visible = paused
-	var need_cursor: bool = paused or Dialogue.is_active()
+	var need_cursor: bool = paused or Dialogue.is_active() or GameState.input_locked
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if need_cursor else Input.MOUSE_MODE_CAPTURED
 	if paused:
 		_refresh_journal()
