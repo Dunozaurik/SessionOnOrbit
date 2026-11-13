@@ -2,6 +2,22 @@
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1_menu"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_endings"]
+bg_color = Color(0.06, 0.08, 0.14, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.35, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+content_margin_left = 32.0
+content_margin_top = 24.0
+content_margin_right = 32.0
+content_margin_bottom = 24.0
+
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -28,9 +44,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -320.0
-offset_top = -170.0
+offset_top = -200.0
 offset_right = 320.0
-offset_bottom = 170.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 14
@@ -64,6 +80,14 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 22
 text = "Начать смену"
 
+[node name="EndingsButton" type="Button" parent="Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 22
+text = "Концовки"
+
 [node name="QuitButton" type="Button" parent="Box"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 48)
@@ -86,5 +110,59 @@ offset_bottom = -12.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 1, 0.4)
-text = "v0.2 · прототип"
+text = "v1.0"
 horizontal_alignment = 2
+
+[node name="EndingsOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="Panel" type="PanelContainer" parent="EndingsOverlay"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -430.0
+offset_top = -290.0
+offset_right = 430.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_endings")
+
+[node name="Box" type="VBoxContainer" parent="EndingsOverlay/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="EndingsTitle" type="Label" parent="EndingsOverlay/Panel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.45, 1)
+theme_override_font_sizes/font_size = 28
+text = "КОНЦОВКИ: 0 / 5"
+
+[node name="EndingsList" type="RichTextLabel" parent="EndingsOverlay/Panel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/line_separation = 6
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 20
+bbcode_enabled = true
+text = "Список концовок"
+
+[node name="EndingsClose" type="Button" parent="EndingsOverlay/Panel/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 42)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Закрыть"

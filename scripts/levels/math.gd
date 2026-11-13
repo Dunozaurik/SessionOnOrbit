@@ -49,7 +49,6 @@ func _on_teacher(_player: Player) -> void:
 				{
 					"speaker": TEACHER,
 					"text": "Но помню, что он состоит из ответов на три примера. Я их разбросал по кафедре, чтобы не забыть. Логично же?",
-					"call": func(): self.stage = Stage.SEARCHING,
 					"choices": [
 						["Логично.", [
 							{"speaker": TEACHER, "text": "Вот! Наконец-то студент с математическим мышлением. Ищи."},
@@ -62,21 +61,32 @@ func _on_teacher(_player: Player) -> void:
 						]],
 					],
 				},
+				{
+					"speaker": TEACHER,
+					"text": "Примеры ищи на доске, у меня на столе и... под стулом. Сейф — вон там, в углу. Жду с ведомостью.",
+					"call": func(): self.stage = Stage.SEARCHING,
+				},
 			])
 		Stage.SEARCHING:
 			Dialogue.start([{"speaker": TEACHER, "text": "Примеры на доске, на моём столе и... где-то под стулом. Не спрашивай, как он туда попал. Ответы по порядку — и будет код."}])
 		Stage.OPENED:
-			stage = Stage.DONE
 			Dialogue.start([
 				{"speaker": TEACHER, "text": "Открыл? Без калькулятора? Моё уважение. Даже в мнимой части."},
 				{
 					"speaker": TEACHER,
 					"text": "Расписываюсь. Только бутерброд в сейфе не трогай — он мой. С 2019 года.",
-					"call": GameState.add_signature.bind("integralov"),
+					"call": _sign,
 				},
 			])
 		Stage.DONE:
 			Dialogue.start([{"speaker": TEACHER, "text": "Иди. Предел твоих мучений на этой кафедре достигнут."}])
+
+
+## Подпись и завершение задания — одним действием, на реплике с подписью.
+## Если выйти из диалога раньше, задание не считается сданным и разговор можно повторить.
+func _sign() -> void:
+	stage = Stage.DONE
+	GameState.add_signature("integralov")
 
 
 func _on_clue(_player: Player, clue: String) -> void:

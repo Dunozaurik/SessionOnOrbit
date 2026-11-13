@@ -83,7 +83,6 @@ func _on_teacher(_player: Player) -> void:
 				{
 					"speaker": TEACHER,
 					"text": "О, студент. За подписью? Подпись будет, когда заработает компилятор станции. Он третьи сутки не может собрать расписание.",
-					"call": start,
 					"choices": [
 						["Я помогу.", [
 							{"speaker": TEACHER, "text": "Вот это настрой. Терминал у стены. Найди строку с ошибкой — компилятор подскажет. Ну, как подскажет. Намекнёт."},
@@ -96,6 +95,7 @@ func _on_teacher(_player: Player) -> void:
 						]],
 					],
 				},
+				{"speaker": TEACHER, "text": "Починишь — возвращайся за подписью. Я буду тут: мне, в отличие от программы, идти некуда.", "call": start},
 			])
 		Stage.DEBUGGING:
 			Dialogue.start([{"speaker": TEACHER, "text": "Терминал у стены. Ошибки сами себя не найдут. Хотя было бы удобно."}])
@@ -168,15 +168,21 @@ func _compile() -> void:
 
 
 func _give_signature() -> void:
-	stage = Stage.DONE
 	Dialogue.start([
 		{"speaker": TEACHER, "text": "Работает! Расписание станции снова собирается. Теперь все пары опять будут переноситься автоматически."},
 		{
 			"speaker": TEACHER,
 			"text": "90% времени — ищем точку с запятой, 10% — любуемся звёздами. Сегодня ты успел и то и другое. Давай зачётку.",
-			"call": GameState.add_signature.bind("syntaksisov"),
+			"call": _sign,
 		},
 	])
+
+
+## Подпись и завершение задания — одним действием, на реплике с подписью.
+## Если выйти из диалога раньше, задание не считается сданным и разговор можно повторить.
+func _sign() -> void:
+	stage = Stage.DONE
+	GameState.add_signature("syntaksisov")
 
 
 func _on_someones_pc(_player: Player) -> void:

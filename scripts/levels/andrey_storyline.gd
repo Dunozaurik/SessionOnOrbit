@@ -68,7 +68,6 @@ func _on_andrey(_player: Player) -> void:
 			"text": "Я тут подумал... а обратно-то как? Последний шаттл на Гатчину-4 ушёл в 2019-м.",
 		}])
 		return
-	GameState.flags["andrey_talked"] = true
 	Dialogue.start([
 		{"speaker": speaker, "text": "...Пацаны."},
 		{"speaker": speaker, "text": "Вы не поверите, что произошло."},
@@ -82,9 +81,10 @@ func _on_andrey(_player: Player) -> void:
 			["Это точно ты, а не голограмма?", [
 				{"speaker": speaker, "text": "Не знаю. Ущипни меня. Нет, не надо, у меня справка."},
 			]],
-			["Только пакеты из «Вкусно и точка» у кабинета не оставляй.", [
-				{"speaker": speaker, "text": "Это было ОДИН раз! И вообще там ещё Ярик с Костей были! Почему всегда я?!"},
-			]],
 		]},
-		{"speaker": speaker, "text": "Ладно, раз уж я здесь — отметьте меня. Пусть все видят."},
+		{
+			"speaker": speaker,
+			"text": "Ладно, раз уж я здесь — отметьте меня. Пусть все видят.",
+			"call": func(): GameState.flags["andrey_talked"] = true,
+		},
 	])

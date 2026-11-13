@@ -54,6 +54,36 @@ var easter_eggs: Array[String] = []
 var spawn_id := ""
 ## true, пока открыт экран-головоломка: игрок не ходит и не крутит камерой.
 var input_locked := false
+## Какой концовкой закончилась игра (см. Endings) и когда она началась — для экрана титров.
+var ending_id := ""
+var start_msec := 0
+## Концовки, которые игрок уже видел. Хранятся в файле и переживают перезапуск игры —
+## их показывает раздел «Концовки» в главном меню.
+var unlocked_endings: Array[String] = []
+var progress_file := "user://progress.cfg"
+
+
+func _ready() -> void:
+	load_progress()
+
+
+func load_progress() -> void:
+	unlocked_endings.clear()
+	var config := ConfigFile.new()
+	if config.load(progress_file) != OK:
+		return
+	for id in config.get_value("endings", "unlocked", []):
+		if id not in unlocked_endings:
+			unlocked_endings.append(id)
+
+
+func _unlock_ending(ending: String) -> void:
+	if ending in unlocked_endings:
+		return
+	unlocked_endings.append(ending)
+	var config := ConfigFile.new()
+	config.set_value("endings", "unlocked", unlocked_endings)
+	config.save(progress_file)
 
 
 func reset() -> void:
@@ -63,6 +93,8 @@ func reset() -> void:
 	easter_eggs.clear()
 	spawn_id = ""
 	input_locked = false
+	ending_id = ""
+	start_msec = Time.get_ticks_msec()
 	AndreyTrip.reset()
 	signatures_changed.emit(0, TOTAL_SIGNATURES)
 	cheat_sheets_changed.emit(0, TOTAL_CHEAT_SHEETS)
@@ -81,7 +113,10 @@ func current_subject_index() -> int:
 
 
 ## Можно ли идти сдавать предмет: он уже сдан или следующий по очереди.
+## "deanery" — деканат, открыт только с полной зачёткой.
 func is_subject_open(teacher_id: String) -> bool:
+	if teacher_id == "deanery":
+		return current_subject_index() >= SUBJECTS.size()
 	for i in SUBJECTS.size():
 		if SUBJECTS[i]["id"] == teacher_id:
 			return i <= current_subject_index()
@@ -106,6 +141,27 @@ func collect_cheat_sheet(id: String, text: String) -> void:
 	post_message("Шпора %d/%d: «%s»" % [cheat_sheets, TOTAL_CHEAT_SHEETS, text])
 	if cheat_sheets >= TOTAL_CHEAT_SHEETS:
 		find_easter_egg("cheat_sheets")
+
+
+## Завершить игру концовкой ending: экран концовки со статистикой и титрами.
+func finish_game(ending: String) -> void:
+	ending_id = ending
+	_unlock_ending(ending)
+	AndreyTrip.active = false
+	Transition.go("res://scenes/ui/ending_screen.tscn")
+
+
+## То же, но после того, как закроется текущий диалог (удобно вызывать из "call" реплики).
+func finish_after_dialogue(ending: String) -> void:
+	if Dialogue.is_active():
+		Dialogue.finished.connect(finish_game.bind(ending), CONNECT_ONE_SHOT)
+	else:
+		finish_game(ending)
+
+
+func play_time_text() -> String:
+	var seconds := (Time.get_ticks_msec() - start_msec) / 1000
+	return "%d:%02d" % [seconds / 60, seconds % 60]
 
 
 func post_message(text: String) -> void:

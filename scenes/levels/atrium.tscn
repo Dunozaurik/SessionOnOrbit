@@ -71,6 +71,40 @@ emission_enabled = true
 emission = Color(0.15, 0.25, 0.6, 1)
 emission_energy_multiplier = 0.6
 
+[sub_resource type="StandardMaterial3D" id="Mat_pod"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+metallic = 0.4
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_pod_window"]
+albedo_color = Color(0.1, 0.3, 0.5, 1)
+emission_enabled = true
+emission = Color(0.3, 0.7, 1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_pod_stripe"]
+albedo_color = Color(1, 0.45, 0.1, 1)
+emission_enabled = true
+emission = Color(1, 0.4, 0.1, 1)
+emission_energy_multiplier = 0.8
+
+[sub_resource type="BoxMesh" id="Mesh_pod"]
+material = SubResource("Mat_pod")
+size = Vector3(0.3, 2.3, 1.7)
+
+[sub_resource type="CylinderMesh" id="Mesh_pod_window"]
+material = SubResource("Mat_pod_window")
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.05
+
+[sub_resource type="BoxMesh" id="Mesh_pod_stripe"]
+material = SubResource("Mat_pod_stripe")
+size = Vector3(0.05, 0.12, 1.7)
+
+[sub_resource type="BoxShape3D" id="Shape_pod"]
+size = Vector3(0.5, 2.3, 1.7)
+
 [sub_resource type="BoxMesh" id="Mesh_terminal"]
 material = SubResource("Mat_terminal")
 size = Vector3(1, 1.6, 0.4)
@@ -210,8 +244,9 @@ spawn_id = "FromAtrium"
 [node name="DeaneryDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(0, 0, -11.65)
 title = "ДЕКАНАТ"
-locked = true
-locked_message = "Деканат принимает зачётки только с 6 подписями. Часы приёма: 14:00–14:05, обед с 14:01."
+target_scene = "res://scenes/levels/deanery.tscn"
+spawn_id = "FromAtrium"
+subject_id = "deanery"
 
 [node name="FomDoor" parent="Doors" instance=ExtResource("9_door")]
 position = Vector3(7, 0, -11.65)
@@ -267,6 +302,33 @@ rotation = Vector3(0, 3.14159, 0)
 [node name="FromBzhd" type="Marker3D" parent="Spawns" groups=["spawn"]]
 position = Vector3(9.8, 0, -7)
 rotation = Vector3(0, 1.5708, 0)
+
+[node name="EscapePod" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.65, 1.15, -6)
+script = ExtResource("5_interactable")
+prompt = "Спасательная капсула"
+
+[node name="Mesh" type="MeshInstance3D" parent="EscapePod"]
+mesh = SubResource("Mesh_pod")
+
+[node name="Window" type="MeshInstance3D" parent="EscapePod"]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0.16, 0.35, 0)
+mesh = SubResource("Mesh_pod_window")
+
+[node name="Stripe" type="MeshInstance3D" parent="EscapePod"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, -0.5, 0)
+mesh = SubResource("Mesh_pod_stripe")
+
+[node name="Collision" type="CollisionShape3D" parent="EscapePod"]
+shape = SubResource("Shape_pod")
+
+[node name="EscapePodSign" type="Label3D" parent="."]
+position = Vector3(-11.45, 2.75, -6)
+rotation = Vector3(0, 1.5708, 0)
+text = "СПАСАТЕЛЬНАЯ КАПСУЛА
+(только для экстренных случаев)"
+font_size = 30
+outline_size = 8
 
 [node name="ElevatorDoor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.7, 1.25, 3)
@@ -399,7 +461,7 @@ text = "sin²x + cos²x = 1. Всегда. Даже в космосе."
 [node name="SheetDock" parent="." instance=ExtResource("7_sheet")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2, 0, -11.2)
 id = "atrium_dock"
-text = "Не знаешь ответ — пиши «очевидно». Работает в 50% случаев."
+text = "Спросят, откуда ответ, — говори «из лекции». Преподаватель сам не помнит, что там было."
 
 [node name="SheetElevator" parent="." instance=ExtResource("7_sheet")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.3, 0, 5.4)

@@ -120,17 +120,23 @@ func _on_teacher(_player_node: Player) -> void:
 		Stage.BRIEFED:
 			Dialogue.start([{"speaker": TEACHER, "text": "Инструкция на стене. Начните с того, без чего в космосе не дышат. И не забудьте проверить то, чем дышат."}])
 		Stage.RETURNED:
-			stage = Stage.DONE
 			Dialogue.start([
 				{"speaker": TEACHER, "text": "Моя кружка! Цела! Вы первый, кто вернулся с ней, а не вместо неё."},
 				{
 					"speaker": TEACHER,
 					"text": "Зачёт. Перестраховываясь, ставлю две подписи. Шучу. Одну. Но очень уверенно.",
-					"call": GameState.add_signature.bind("perestrakhov"),
+					"call": _sign,
 				},
 			])
 		Stage.DONE:
 			Dialogue.start([{"speaker": TEACHER, "text": "Помните: лучше перебдеть, чем недобдеть. Это не я придумал. Это тоже инструкция."}])
+
+
+## Подпись и завершение задания — одним действием, на реплике с подписью.
+## Если выйти из диалога раньше, задание не считается сданным и разговор можно повторить.
+func _sign() -> void:
+	stage = Stage.DONE
+	GameState.add_signature("perestrakhov")
 
 
 func _on_poster(_player_node: Player) -> void:

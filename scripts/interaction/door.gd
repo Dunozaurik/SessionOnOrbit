@@ -33,7 +33,9 @@ func _ready() -> void:
 
 func _update_subject_lock() -> void:
 	locked = not GameState.is_subject_open(subject_id)
-	if locked:
+	if locked and subject_id == "deanery":
+		locked_message = "Деканат принимает зачётки только со всеми %d подписями. Часы приёма: 14:00–14:05, обед с 14:01." % GameState.TOTAL_SIGNATURES
+	elif locked:
 		var current: Dictionary = GameState.SUBJECTS[GameState.current_subject_index()]
 		locked_message = "Сюда пока рано: сессия сдаётся по порядку. Сначала — «%s» (%s, %s). Порядок — в зачётке по Tab." % [
 			current["title"], current["teacher"], current["room"]]

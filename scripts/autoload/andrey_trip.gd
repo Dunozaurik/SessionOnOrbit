@@ -66,12 +66,17 @@ func next_story_lines() -> Array:
 		{"speaker": AndreyLines.SPEAKER, "text": AndreyLines.OPENER},
 		{"speaker": AndreyLines.SPEAKER, "text": AndreyLines.STORIES[story_index]},
 	]
-	story_index += 1
-	if story_index >= AndreyLines.STORIES.size():
+	# История засчитывается на последней реплике: если выйти из диалога раньше,
+	# Андрей расскажет её заново.
+	if story_index + 1 >= AndreyLines.STORIES.size():
 		lines.append({"speaker": AndreyLines.SPEAKER, "text": AndreyLines.DEPARTURE, "call": depart})
 	else:
-		lines.append({"speaker": AndreyLines.SPEAKER, "text": _random_ending()})
+		lines.append({"speaker": AndreyLines.SPEAKER, "text": _random_ending(), "call": _story_heard})
 	return lines
+
+
+func _story_heard() -> void:
+	story_index += 1
 
 
 func depart() -> void:

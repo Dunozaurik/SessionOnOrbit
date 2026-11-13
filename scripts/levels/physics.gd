@@ -128,17 +128,23 @@ func _on_teacher(_player_node: Player) -> void:
 			else:
 				Dialogue.start([{"speaker": TEACHER, "text": "Один предохранитель — под самым потолком: начните с ящика у правой стены и прыгайте всё выше. Второй — в шкафу с приборами у левой. У вас сейчас: %d / 3." % _fuse_count()}])
 		Stage.FIXED:
-			stage = Stage.DONE
 			Dialogue.start([
 				{"speaker": TEACHER, "text": "Гравитация вернулась! А вместе с ней — и мой авторитет."},
 				{
 					"speaker": TEACHER,
 					"text": "Подписываю. Ровно. Впервые за весь день.",
-					"call": GameState.add_signature.bind("nevesomova"),
+					"call": _sign,
 				},
 			])
 		Stage.DONE:
 			Dialogue.start([{"speaker": TEACHER, "text": "Спасибо. Если что-то снова полетит — это уже не я. Это, наверное, сессия."}])
+
+
+## Подпись и завершение задания — одним действием, на реплике с подписью.
+## Если выйти из диалога раньше, задание не считается сданным и разговор можно повторить.
+func _sign() -> void:
+	stage = Stage.DONE
+	GameState.add_signature("nevesomova")
 
 
 func _on_ceiling_fuse(_player_node: Player) -> void:

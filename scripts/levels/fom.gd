@@ -51,7 +51,6 @@ func _on_teacher(_player: Player) -> void:
 				{
 					"speaker": TEACHER,
 					"text": "На тест даётся 20 минут. Ой, простите, это у нас на Земле. На станции время идёт быстрее — у вас 20 секунд.",
-					"call": func(): self.stage = Stage.TESTING,
 					"choices": [
 						["20 СЕКУНД?!", [
 							{"speaker": TEACHER, "text": "Не переживайте. Я его решаю за четыре. Минуты. Но вы справитесь быстрее."},
@@ -65,22 +64,32 @@ func _on_teacher(_player: Player) -> void:
 					],
 				},
 				{"speaker": TEACHER, "text": sheets_line},
-				{"speaker": TEACHER, "text": "Терминал Moodle — у правой стены. Удачи. Она вам понадобится."},
+				{
+					"speaker": TEACHER,
+					"text": "Терминал Moodle — у правой стены. Удачи. Она вам понадобится.",
+					"call": func(): self.stage = Stage.TESTING,
+				},
 			])
 		Stage.TESTING:
 			Dialogue.start([{"speaker": TEACHER, "text": "Терминал Moodle у правой стены. Время у вас: %d секунд. Ну, когда начнёте." % int(_time_limit())}])
 		Stage.PASSED:
-			stage = Stage.DONE
 			Dialogue.start([
 				{"speaker": TEACHER, "text": "Сдали?! С первой... с какой попытки? А, неважно. Это успех. Это прорыв в микроэлектронике."},
 				{
 					"speaker": TEACHER,
 					"text": "Расписываюсь. Только Лабонину не говорите — он расстроится.",
-					"call": GameState.add_signature.bind("transistorova"),
+					"call": _sign,
 				},
 			])
 		Stage.DONE:
 			Dialogue.start([{"speaker": TEACHER, "text": "Вы теперь на доске почёта. Сразу после меня. И перед Лабониным."}])
+
+
+## Подпись и завершение задания — одним действием, на реплике с подписью.
+## Если выйти из диалога раньше, задание не считается сданным и разговор можно повторить.
+func _sign() -> void:
+	stage = Stage.DONE
+	GameState.add_signature("transistorova")
 
 
 func _on_terminal(_player: Player) -> void:

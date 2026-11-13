@@ -43,7 +43,9 @@ func _ready() -> void:
 	_update_cheat_sheets(GameState.cheat_sheets, GameState.TOTAL_CHEAT_SHEETS)
 
 
-func _unhandled_input(event: InputEvent) -> void:
+# Именно _input, а не _unhandled_input: иначе во время диалога с вариантами ответа
+# Tab уходит интерфейсу на переключение фокуса между кнопками и до зачётки не доходит.
+func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("journal") and not get_tree().paused:
 		_journal.visible = not _journal.visible
 		if _journal.visible:

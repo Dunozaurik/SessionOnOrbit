@@ -47,6 +47,12 @@ custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 text = "Продолжить"
 
+[node name="RestartButton" type="Button" parent="Columns/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Начать заново"
+
 [node name="MenuButton" type="Button" parent="Columns/Box"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)

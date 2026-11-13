@@ -38,6 +38,7 @@ func _ready() -> void:
 	$ElevatorButton.interacted.connect(_on_elevator)
 	$ScheduleBoard.interacted.connect(_on_schedule)
 	$ElevatorStudent.interacted.connect(_on_petrov)
+	$EscapePod.interacted.connect(_on_escape_pod)
 	_restore_state()
 	if not GameState.flags.get("shift_started", false):
 		GameState.flags["shift_started"] = true
@@ -77,7 +78,7 @@ func _on_zaglushkin(_player: Player) -> void:
 	if GameState.has_signature("zaglushkin"):
 		Dialogue.start([{
 			"speaker": ZAGLUSHKIN,
-			"text": "Я уже расписался. Остальные преподаватели сидят по отсекам, и сдавать их надо строго по порядку — загляни в зачётку, клавиша Tab. Иди, не задерживай временного человека.",
+			"text": "Я уже расписался. Остальные преподаватели сидят по отсекам, и сдавать их надо строго по порядку — загляни в зачётку, клавиша Tab. Иди. А я постою тут и попритворяюсь мебелью — у меня это отлично получается.",
 		}])
 		return
 	var sign_line := {
@@ -131,7 +132,6 @@ func _on_petrov(_player: Player) -> void:
 			"text": "Я тут постою немного. Отвык от открытых пространств. И от людей. И от двадцать первого века.",
 		}])
 		return
-	GameState.flags["petrov_talked"] = true
 	Dialogue.start([
 		{"speaker": PETROV, "text": "Двери... открылись? ОТКРЫЛИСЬ! Товарищ, какой сейчас год?", "choices": [
 			["2057-й.", [
@@ -152,8 +152,29 @@ func _on_petrov(_player: Player) -> void:
 		{
 			"speaker": PETROV,
 			"text": "Ладно, побегу. Может, хоть на третью пару успею. По лестнице.",
-			"call": GameState.find_easter_egg.bind("elevator"),
+			"call": _petrov_done,
 		},
+	])
+
+
+## Разговор с Петровым дослушан до конца (если выйти раньше — можно поговорить заново).
+func _petrov_done() -> void:
+	GameState.flags["petrov_talked"] = true
+	GameState.find_easter_egg("elevator")
+
+
+## Концовка «Отчислился сам»: улететь от сессии можно в любой момент.
+func _on_escape_pod(_player: Player) -> void:
+	Dialogue.start([
+		{"speaker": "Спасательная капсула", "text": "Табличка: «Только для экстренных случаев». Ниже кто-то дописал ручкой: «Сессия — экстренный случай? — Да. — А.Л.»", "choices": [
+			["Улететь от сессии навсегда", [
+				{"speaker": "", "text": "Люк закрывается. На табло капсулы мигает: «КУРС: ГАТЧИНА-4. ВРЕМЯ В ПУТИ: НЕИЗВЕСТНО»."},
+				{"speaker": "", "text": "*пш-ш-ш... отстыковка*", "call": GameState.finish_after_dialogue.bind("dropout")},
+			]],
+			["Остаться и всё сдать", [
+				{"speaker": "", "text": "Правильно. Зачётка сама себя не заполнит."},
+			]],
+		]},
 	])
 
 
