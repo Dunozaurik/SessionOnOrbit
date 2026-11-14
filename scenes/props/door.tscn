@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/interaction/door.gd" id="1_door"]
+[ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="2_modelprop"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_frame"]
 albedo_color = Color(0.25, 0.28, 0.34, 1)
@@ -37,21 +38,20 @@ size = Vector3(2.2, 3, 0.4)
 script = ExtResource("1_door")
 prompt = "Войти"
 
-[node name="Frame" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-mesh = SubResource("Mesh_frame")
+[node name="Frame" type="Node3D" parent="."]
+script = ExtResource("2_modelprop")
+model_path = "res://assets/models/station/wall-door.glb"
+size = Vector3(3.6, 3.3, 0.5)
 
-[node name="Panel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.12)
-mesh = SubResource("Mesh_panel")
-
-[node name="Stripe" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.18)
-mesh = SubResource("Mesh_stripe")
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.02)
+script = ExtResource("2_modelprop")
+model_path = "res://assets/models/station/door-double.glb"
+size = Vector3(1.5, 2.3, 0.1)
 
 [node name="Light" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.78, 0.3)
 mesh = SubResource("Mesh_light")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
@@ -60,7 +60,7 @@ shape = SubResource("Shape_door")
 
 [node name="Sign" type="Label3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3, 0.12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 0.3)
 text = "ОТСЕК"
 font_size = 72
 outline_size = 14

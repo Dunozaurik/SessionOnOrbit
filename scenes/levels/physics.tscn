@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/levels/physics.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
@@ -11,6 +12,9 @@
 [ext_resource type="Script" path="res://scripts/props/floating_prop.gd" id="9_prop"]
 [ext_resource type="Script" path="res://scripts/props/spin.gd" id="10_spin"]
 [ext_resource type="PackedScene" path="res://scenes/props/floating_chair.tscn" id="11_chair"]
+
+[sub_resource type="BoxShape3D" id="Shape_teacher_desk"]
+size = Vector3(2, 0.8, 0.9)
 
 [sub_resource type="Environment" id="Environment_lab"]
 background_mode = 1
@@ -244,11 +248,17 @@ use_collision = true
 size = Vector3(0.5, 9.5, 12)
 material = SubResource("Mat_wall")
 
-[node name="TeacherDesk" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.4, -1.2)
-use_collision = true
-size = Vector3(2, 0.8, 0.9)
-material = SubResource("Mat_desk")
+[node name="TeacherDesk" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -1.2)
+
+[node name="Model" type="Node3D" parent="Geometry/TeacherDesk"]
+script = ExtResource("90_modelprop")
+model_path = "res://assets/models/station/table-large.glb"
+size = Vector3(2.1, 0.8, 1)
+
+[node name="Collision" type="CollisionShape3D" parent="Geometry/TeacherDesk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("Shape_teacher_desk")
 
 [node name="Platforms" type="Node3D" parent="."]
 

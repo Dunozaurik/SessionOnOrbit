@@ -1,24 +1,6 @@
 [gd_scene format=3]
 
-[sub_resource type="StandardMaterial3D" id="Mat_seat"]
-albedo_color = Color(0.25, 0.4, 0.6, 1)
-
-[sub_resource type="StandardMaterial3D" id="Mat_leg"]
-albedo_color = Color(0.3, 0.32, 0.36, 1)
-metallic = 0.5
-roughness = 0.5
-
-[sub_resource type="BoxMesh" id="Mesh_seat"]
-material = SubResource("Mat_seat")
-size = Vector3(0.48, 0.05, 0.48)
-
-[sub_resource type="BoxMesh" id="Mesh_back"]
-material = SubResource("Mat_seat")
-size = Vector3(0.48, 0.5, 0.05)
-
-[sub_resource type="BoxMesh" id="Mesh_leg"]
-material = SubResource("Mat_leg")
-size = Vector3(0.04, 0.45, 0.04)
+[ext_resource type="Script" path="res://scripts/props/furniture.gd" id="1_furniture"]
 
 [sub_resource type="BoxShape3D" id="Shape_seat"]
 size = Vector3(0.48, 0.05, 0.48)
@@ -27,30 +9,8 @@ size = Vector3(0.48, 0.05, 0.48)
 size = Vector3(0.48, 0.5, 0.05)
 
 [node name="Chair" type="StaticBody3D"]
-
-[node name="Seat" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0)
-mesh = SubResource("Mesh_seat")
-
-[node name="Back" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.215)
-mesh = SubResource("Mesh_back")
-
-[node name="LegFL" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.225, -0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegFR" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.225, -0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegBL" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.225, 0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegBR" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.225, 0.2)
-mesh = SubResource("Mesh_leg")
+script = ExtResource("1_furniture")
+kind = 1
 
 [node name="CollisionSeat" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0)

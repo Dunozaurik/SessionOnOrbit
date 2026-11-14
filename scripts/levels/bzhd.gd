@@ -18,6 +18,12 @@ const BOOTS_WALK_SPEED := 2.2
 const FALL_LIMIT := -6.0
 ## Что говорит запертая дверь в атриум, пока на игроке скафандр.
 const SUIT_EXIT_MESSAGE := "Перестрахов: «В скафандре — только в шлюз и в космос. Скафандр казённый, а атриум — общественное место. Снять его можно у шкафчика со скафандром»."
+## Что ловит антенна на ферме снаружи (пасхалка про Андрея).
+const ANTENNA_LINES: Array[String] = [
+	"Антенна поймала один канал: «Пацаны, вы не поверите, что произошло...» Дальше — помехи. Андрей на связи, но недолго.",
+	"Антенна принимает Гатчину-4: «Я почти доехал. Тут просто такое дело...» Связь прервана. Как всегда.",
+	"Антенна ловит приём: «Алё, меня слышно? Меня не слышно? Я говорю — я уже выехал». Это было в прошлый четверг.",
+]
 ## Страховочный трос идёт от крюка к игроку через направляющую точку у проёма двери: так он не задевает стену.
 ## Точки заданы по осям: z — чуть в стороне от косяка (проём шириной 2 м, косяк на z = -1), y — высота троса,
 ## x — до стены, в стене (направляющее кольцо) и после неё. Подробности — в _update_tether_rope().
@@ -84,6 +90,7 @@ func _ready() -> void:
 	$PressureLever.interacted.connect(_on_lever)
 	$OuterButton.interacted.connect(_on_outer_button)
 	$Mug.interacted.connect(_on_mug)
+	$Antenna.interacted.connect(_on_antenna)
 	$AirlockZone.body_entered.connect(_on_airlock_entered)
 	$AirlockZone.body_exited.connect(_on_airlock_exited)
 	$OutsideZone.body_entered.connect(_on_outside_entered)
@@ -224,6 +231,12 @@ func _on_oxygen(_player_node: Player) -> void:
 	Sfx.play("blip")
 	GameState.post_message("Кислород в баллоне скафандра: 100%. Хватит на 6 часов или на одну пару.")
 	_update_overlay()
+
+
+## Пасхальная антенна: ловит единственный канал.
+func _on_antenna(_player_node: Player) -> void:
+	Sfx.play("blip")
+	GameState.post_message(ANTENNA_LINES.pick_random())
 
 
 func _on_tether(_player_node: Player) -> void:

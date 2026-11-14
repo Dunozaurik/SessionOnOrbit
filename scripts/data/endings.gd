@@ -46,6 +46,7 @@ Godot Engine 4
 
 [color=#ffd36b][font_size=27][b]Люди:[/b][/font_size][/color]
 Модели персонажей — Quaternius (CC0)
+Мебель и интерьер — Kenney (CC0)
 Проф. Заглушкин — собственная капсула
 
 [color=#ffd36b][font_size=27][b]Звуки и фоновая музыка:[/b][/font_size][/color]

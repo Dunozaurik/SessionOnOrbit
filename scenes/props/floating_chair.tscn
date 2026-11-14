@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/props/floating_prop.gd" id="1_prop"]
+[ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="2_modelprop"]
 
 [sub_resource type="PhysicsMaterial" id="Phys_bouncy"]
 friction = 0.4
@@ -38,29 +39,12 @@ physics_material_override = SubResource("Phys_bouncy")
 script = ExtResource("1_prop")
 spin = 0.4
 
-[node name="Seat" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
-mesh = SubResource("Mesh_seat")
-
-[node name="Back" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.215)
-mesh = SubResource("Mesh_back")
-
-[node name="LegFL" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, -0.225, -0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegFR" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.225, -0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegBL" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, -0.225, 0.2)
-mesh = SubResource("Mesh_leg")
-
-[node name="LegBR" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.225, 0.2)
-mesh = SubResource("Mesh_leg")
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+script = ExtResource("2_modelprop")
+model_path = "res://assets/models/furniture/chair.glb"
+size = Vector3(0.5, 1, 0.5)
+flip = true
 
 [node name="CollisionBody" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)

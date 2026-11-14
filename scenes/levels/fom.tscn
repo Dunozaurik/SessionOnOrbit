@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/levels/fom.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
@@ -12,6 +13,9 @@
 [ext_resource type="PackedScene" path="res://scenes/props/chair.tscn" id="10_chair"]
 [ext_resource type="PackedScene" path="res://scenes/props/cheat_sheet.tscn" id="11_sheet"]
 [ext_resource type="Script" path="res://scripts/props/star_window.gd" id="12_stars"]
+
+[sub_resource type="BoxShape3D" id="Shape_teacher_desk"]
+size = Vector3(2, 0.8, 0.9)
 
 [sub_resource type="Environment" id="Environment_fom"]
 background_mode = 1
@@ -125,23 +129,33 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, -4.72)
 size = Vector3(4.2, 1.5, 0.06)
 material = SubResource("Mat_board")
 
-[node name="TeacherDesk" type="CSGBox3D" parent="Geometry"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.4, -3)
-use_collision = true
-size = Vector3(2, 0.8, 0.9)
-material = SubResource("Mat_desk")
+[node name="TeacherDesk" type="StaticBody3D" parent="Geometry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0, 0, -3.0)
+
+[node name="Model" type="Node3D" parent="Geometry/TeacherDesk"]
+script = ExtResource("90_modelprop")
+model_path = "res://assets/models/station/table-large.glb"
+size = Vector3(2.1, 0.8, 1)
+
+[node name="Collision" type="CollisionShape3D" parent="Geometry/TeacherDesk"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("Shape_teacher_desk")
 
 [node name="DeskL1" parent="Geometry" instance=ExtResource("9_desk")]
 position = Vector3(-2.5, 0, 0)
+with_computer = true
 
 [node name="DeskR1" parent="Geometry" instance=ExtResource("9_desk")]
 position = Vector3(2.5, 0, 0)
+with_computer = true
 
 [node name="DeskL2" parent="Geometry" instance=ExtResource("9_desk")]
 position = Vector3(-2.5, 0, 2)
+with_computer = true
 
 [node name="DeskR2" parent="Geometry" instance=ExtResource("9_desk")]
 position = Vector3(2.5, 0, 2)
+with_computer = true
 
 [node name="ChairL1" parent="Geometry" instance=ExtResource("10_chair")]
 position = Vector3(-2.5, 0, 0.65)
