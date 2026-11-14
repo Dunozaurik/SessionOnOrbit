@@ -1,0 +1,158 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/settings_panel.gd" id="1_settings"]
+[ext_resource type="Theme" path="res://assets/ui/menu_theme.tres" id="2_theme"]
+
+[node name="SettingsPanel" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_settings")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -200.0
+offset_right = 340.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Panel/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.45, 1)
+theme_override_font_sizes/font_size = 28
+text = "НАСТРОЙКИ"
+
+[node name="MusicRow" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MusicLabel" type="Label" parent="Panel/Box/MusicRow"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Музыка"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/Box/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0
+max_value = 100
+step = 5.0
+value = 50
+
+[node name="MusicValue" type="Label" parent="Panel/Box/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "50%"
+horizontal_alignment = 2
+
+[node name="SfxRow" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SfxLabel" type="Label" parent="Panel/Box/SfxRow"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Звуки"
+
+[node name="SfxSlider" type="HSlider" parent="Panel/Box/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0
+max_value = 100
+step = 5.0
+value = 80
+
+[node name="SfxValue" type="Label" parent="Panel/Box/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "80%"
+horizontal_alignment = 2
+
+[node name="MouseRow" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MouseLabel" type="Label" parent="Panel/Box/MouseRow"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Чувствительность мыши"
+
+[node name="MouseSlider" type="HSlider" parent="Panel/Box/MouseRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 25
+max_value = 300
+step = 5.0
+value = 100
+
+[node name="MouseValue" type="Label" parent="Panel/Box/MouseRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "100%"
+horizontal_alignment = 2
+
+[node name="FullscreenRow" type="HBoxContainer" parent="Panel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FullscreenLabel" type="Label" parent="Panel/Box/FullscreenRow"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Полный экран  (F11)"
+
+[node name="FullscreenToggle" type="CheckButton" parent="Panel/Box/FullscreenRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Выключен"
+
+[node name="CloseButton" type="Button" parent="Panel/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 42)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Закрыть"

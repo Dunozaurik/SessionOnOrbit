@@ -7,5 +7,6 @@
 |-------|-----|-------------------|-------|----------|------------------|
 | Шрифт интерфейса по умолчанию | Шрифт | Встроен в Godot | Godot Engine contributors | MIT | Весь интерфейс |
 | icon.svg | Иконка | Создана самостоятельно | — | — | Иконка приложения |
-| Геометрия тестового отсека, заглушки объектов и NPC | 3D (примитивы) | Создано в Godot (CSG, BoxMesh, CapsuleMesh) | — | — | station_test.tscn, npc.tscn, cheat_sheet.tscn |
-| Звуки: click, interact, blip, pickup, egg, denied, ding, chat, shuttle | Аудио (WAV) | Синтезированы скриптом `tools/generate_sfx.py` | — (собственные) | — | assets/audio/sfx, автозагрузка Sfx |
+| Геометрия всех отсеков, мебель, заглушки объектов и NPC | 3D (примитивы) | Создано в Godot (CSG, BoxMesh, CapsuleMesh и т. п.) | — | — | scenes/levels/*, scenes/props/*, scenes/npc/npc.tscn |
+| Звуки: click, interact, blip, pickup, egg, denied, ding, chat, shuttle, door, success, thud, hiss, fail | Аудио (WAV) | Синтезированы скриптом `tools/generate_sfx.py` | — (собственные) | — | assets/audio/sfx, автозагрузка Sfx |
+| Фоновая музыка ambient.wav (эмбиент, 40 с, зацикленная) | Аудио (WAV) | Синтезирована скриптом `tools/generate_music.py` | — (собственная) | — | assets/audio/music, автозагрузка Music |

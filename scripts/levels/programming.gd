@@ -28,7 +28,7 @@ const ROUNDS: Array[Dictionary] = [
 			"void start_shift() {",
 			"    open_door(AIRLOCK_3);",
 			"    check_oxygen();",
-			"    pirnt(\"Смена началась\");",
+			"    pirnt(\"Сессия началась\");",
 			"    close_door(AIRLOCK_3);",
 			"}",
 		],

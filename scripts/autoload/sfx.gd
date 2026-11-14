@@ -21,6 +21,7 @@ func _ready() -> void:
 		_streams[sound] = load(SOUND_DIR + sound + ".wav")
 	for i in POOL_SIZE:
 		var player := AudioStreamPlayer.new()
+		player.bus = Settings.SFX_BUS
 		add_child(player)
 		_pool.append(player)
 	get_tree().node_added.connect(_on_node_added)
@@ -37,6 +38,7 @@ func play(sound: String, volume_db := 0.0, pitch := 1.0) -> void:
 func play_at(sound: String, position: Vector3, volume_db := 0.0) -> void:
 	var player := AudioStreamPlayer3D.new()
 	player.stream = _streams[sound]
+	player.bus = Settings.SFX_BUS
 	player.volume_db = volume_db
 	player.finished.connect(player.queue_free)
 	get_tree().current_scene.add_child(player)

@@ -42,7 +42,7 @@ func _ready() -> void:
 	_restore_state()
 	if not GameState.flags.get("shift_started", false):
 		GameState.flags["shift_started"] = true
-		GameState.post_message("Смена началась. Собери %d подписей и сдай зачётку в деканат. Список предметов — по Tab." % GameState.TOTAL_SIGNATURES)
+		GameState.post_message("Сессия началась. Собери %d подписей и сдай зачётку в деканат. Список предметов — по Tab." % GameState.TOTAL_SIGNATURES)
 
 
 ## Возвращает атриум в то состояние, в котором его оставили.

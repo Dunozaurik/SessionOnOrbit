@@ -32,8 +32,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_busy():
 		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x * mouse_sensitivity)
-		_head.rotate_x(-event.relative.y * mouse_sensitivity)
+		var sensitivity := mouse_sensitivity * Settings.mouse_sensitivity
+		rotate_y(-event.relative.x * sensitivity)
+		_head.rotate_x(-event.relative.y * sensitivity)
 		_head.rotation.x = clampf(_head.rotation.x, deg_to_rad(-85.0), deg_to_rad(85.0))
 	elif event is InputEventMouseButton and event.pressed:
 		# После alt-tab мышь могла освободиться — клик возвращает захват.

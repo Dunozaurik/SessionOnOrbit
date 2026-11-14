@@ -1,6 +1,9 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_panel.tscn" id="2_settings"]
+[ext_resource type="Theme" path="res://assets/ui/menu_theme.tres" id="3_theme"]
+[ext_resource type="PackedScene" path="res://scenes/ui/confirm_dialog.tscn" id="9_confirm"]
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
@@ -13,75 +16,112 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.03, 0.08, 0.8)
+color = Color(0.02, 0.03, 0.08, 0.78)
 
-[node name="Columns" type="HBoxContainer" parent="."]
+[node name="Card" type="PanelContainer" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -540.0
-offset_top = -200.0
-offset_right = 540.0
-offset_bottom = 200.0
+offset_left = -520.0
+offset_top = -250.0
+offset_right = 520.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 60
+theme = ExtResource("3_theme")
 
-[node name="Box" type="VBoxContainer" parent="Columns"]
-custom_minimum_size = Vector2(320, 0)
+[node name="Columns" type="HBoxContainer" parent="Card"]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="Box" type="VBoxContainer" parent="Card/Columns"]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_constants/separation = 12
-alignment = 1
 
-[node name="Title" type="Label" parent="Columns/Box"]
+[node name="Eyebrow" type="Label" parent="Card/Columns/Box"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 36
-text = "Пауза"
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.8, 0.35, 0.9)
+theme_override_font_sizes/font_size = 14
+text = "С Е С С И Я   Н А   О Р Б И Т Е"
 
-[node name="ContinueButton" type="Button" parent="Columns/Box"]
+[node name="Title" type="Label" parent="Card/Columns/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.88, 1, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.25, 0.55, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 44
+text = "ПАУЗА"
+
+[node name="Spacer" type="Control" parent="Card/Columns/Box"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="Card/Columns/Box"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "Продолжить"
 
-[node name="RestartButton" type="Button" parent="Columns/Box"]
+[node name="RestartButton" type="Button" parent="Card/Columns/Box"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "Начать заново"
 
-[node name="MenuButton" type="Button" parent="Columns/Box"]
+[node name="SettingsButton" type="Button" parent="Card/Columns/Box"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Настройки"
+
+[node name="MenuButton" type="Button" parent="Card/Columns/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "В главное меню"
 
-[node name="QuitButton" type="Button" parent="Columns/Box"]
+[node name="QuitButton" type="Button" parent="Card/Columns/Box"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 text = "Выйти из игры"
 
-[node name="Journal" type="VBoxContainer" parent="Columns"]
+[node name="Divider" type="VSeparator" parent="Card/Columns"]
+layout_mode = 2
+
+[node name="Journal" type="VBoxContainer" parent="Card/Columns"]
+custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
-alignment = 1
 
-[node name="EggsTitle" type="Label" parent="Columns/Journal"]
+[node name="EggsTitle" type="Label" parent="Card/Columns/Journal"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.86, 0.45, 1)
 theme_override_font_sizes/font_size = 26
 text = "Пасхалки: 0 / 0"
 
-[node name="EggsList" type="Label" parent="Columns/Journal"]
+[node name="JournalLine" type="HSeparator" parent="Card/Columns/Journal"]
+layout_mode = 2
+
+[node name="EggsList" type="RichTextLabel" parent="Card/Columns/Journal"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/line_spacing = 6
-theme_override_font_sizes/font_size = 18
+size_flags_vertical = 3
+theme_override_constants/line_separation = 8
+theme_override_font_sizes/normal_font_size = 17
+bbcode_enabled = true
 text = "[  ]  ???"
-autowrap_mode = 3
+
+[node name="SettingsPanel" parent="." instance=ExtResource("2_settings")]
+unique_name_in_owner = true
+
+[node name="ConfirmQuit" parent="." instance=ExtResource("9_confirm")]
+unique_name_in_owner = true
+
+[node name="ConfirmRestart" parent="." instance=ExtResource("9_confirm")]
+unique_name_in_owner = true

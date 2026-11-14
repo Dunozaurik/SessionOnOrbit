@@ -19,8 +19,10 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Settings="*res://scripts/autoload/settings.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 Sfx="*res://scripts/autoload/sfx.gd"
+Music="*res://scripts/autoload/music.gd"
 Dialogue="*res://scenes/ui/dialogue_box.tscn"
 AndreyTrip="*res://scripts/autoload/andrey_trip.gd"
 Transition="*res://scenes/ui/transition.tscn"

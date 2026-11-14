@@ -3,7 +3,7 @@ extends Control
 ## Главное меню. Подзаголовок каждый раз выбирается случайно — первая мелкая пасхалка.
 ## Раздел «Концовки» показывает, какие финалы уже открыты (хранятся в GameState.unlocked_endings).
 
-const FIRST_LEVEL := "res://scenes/levels/atrium.tscn"
+const INTRO := "res://scenes/ui/intro.tscn"
 
 const TAGLINES: Array[String] = [
 	"В космосе никто не услышит, как ты не сдал курсовую.",
@@ -20,13 +20,21 @@ const TAGLINES: Array[String] = [
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	AndreyTrip.active = false
+	Music.set_menu_mode(true)
 	%Tagline.text = TAGLINES.pick_random()
 	%StartButton.pressed.connect(_on_start)
-	%QuitButton.pressed.connect(get_tree().quit)
+	%QuitButton.pressed.connect(_ask_quit)
+	%ConfirmQuit.confirmed.connect(get_tree().quit)
+	%ConfirmQuit.cancelled.connect(%QuitButton.grab_focus)
 	%EndingsButton.pressed.connect(_show_endings)
 	%EndingsClose.pressed.connect(_hide_endings)
+	%SettingsButton.pressed.connect(%SettingsPanel.open)
+	%SettingsPanel.closed.connect(%SettingsButton.grab_focus)
 	%EndingsButton.text = "Концовки: %d / %d" % [GameState.unlocked_endings.size(), Endings.ORDER.size()]
 	%StartButton.grab_focus()
+	# Плавное появление меню.
+	%Box.modulate.a = 0.0
+	create_tween().tween_property(%Box, "modulate:a", 1.0, 0.9).set_trans(Tween.TRANS_SINE)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -56,6 +64,10 @@ func _hide_endings() -> void:
 	%EndingsButton.grab_focus()
 
 
+func _ask_quit() -> void:
+	%ConfirmQuit.ask("Отчисляемся?", "Деканат будет безутешен. Хотя нет, он даже не заметит.", "Отчислиться", "Остаться")
+
+
 func _on_start() -> void:
 	GameState.reset()
-	Transition.go(FIRST_LEVEL)
+	Transition.go(INTRO)

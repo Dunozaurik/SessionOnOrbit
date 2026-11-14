@@ -7,6 +7,7 @@ extends Node3D
 
 
 func _ready() -> void:
+	Music.set_menu_mode(false)
 	_place_player()
 
 
