@@ -34,3 +34,11 @@ func set_menu_mode(menu: bool) -> void:
 		_tween.kill()
 	_tween = create_tween()
 	_tween.tween_property(_player, "volume_db", target, FADE_TIME)
+
+
+## Плавно приглушить фоновую дорожку до тишины (на время песни в титрах).
+func fade_out(time := 1.5) -> void:
+	if _tween:
+		_tween.kill()
+	_tween = create_tween()
+	_tween.tween_property(_player, "volume_db", -60.0, time)
