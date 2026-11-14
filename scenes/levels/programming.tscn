@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/room_skin.gd" id="95_roomskin"]
 [ext_resource type="Script" path="res://scripts/levels/programming.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
@@ -312,3 +313,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 [node name="PauseMenu" parent="." instance=ExtResource("4_pause")]
 
 [node name="CodePuzzle" parent="." instance=ExtResource("8_puzzle")]
+
+[node name="RoomSkin" type="Node3D" parent="."]
+script = ExtResource("95_roomskin")

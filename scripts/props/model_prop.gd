@@ -14,6 +14,11 @@ extends Node3D
 @export var size := Vector3(1, 1, 1)
 ## Повернуть на 180° вокруг вертикали (у моделей Kenney «перед» смотрит в +Z, у нашей мебели — в -Z).
 @export var flip := false
+## Цвет-множитель для материалов модели (белый — без изменений): так стены разных комнат получают свой оттенок.
+@export var tint := Color.WHITE
+
+## Перекрашенные копии материалов: одна на пару «исходный материал + цвет», чтобы сотни плиток не плодили копии.
+static var _tint_cache: Dictionary = {}
 
 var _model: Node3D
 
@@ -39,6 +44,8 @@ func _build() -> void:
 		return
 	var factor := Vector3(size.x / box.size.x, size.y / box.size.y, size.z / box.size.z)
 	var center := Vector3(box.position.x + box.size.x * 0.5, box.position.y, box.position.z + box.size.z * 0.5)
+	if tint != Color.WHITE:
+		_apply_tint(_model)
 	var rotation_basis := Basis(Vector3.UP, PI) if flip else Basis.IDENTITY
 	var scale_basis := Basis.from_scale(factor)
 	_model.transform = Transform3D(rotation_basis * scale_basis, rotation_basis * (-(scale_basis * center)))
@@ -61,3 +68,20 @@ func _local_aabb(node: Node, parent_transform: Transform3D) -> AABB:
 			result = sub if first else result.merge(sub)
 			first = false
 	return result
+
+
+func _apply_tint(node: Node) -> void:
+	for child in node.get_children():
+		if child is MeshInstance3D:
+			var mesh_instance := child as MeshInstance3D
+			for surface in mesh_instance.mesh.get_surface_count():
+				var original := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
+				if original == null:
+					continue
+				var key := "%d_%s" % [original.get_instance_id(), tint.to_html()]
+				if not _tint_cache.has(key):
+					var copy := original.duplicate() as StandardMaterial3D
+					copy.albedo_color = original.albedo_color * tint
+					_tint_cache[key] = copy
+				mesh_instance.set_surface_override_material(surface, _tint_cache[key])
+		_apply_tint(child)
