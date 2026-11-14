@@ -18,8 +18,8 @@ const QUEUE_STEP_TIME := 4.0
 ## Места в очереди: [0] — у окошка, дальше — в хвост по диагонали влево-назад,
 ## с шагом около полутора метров и в стороне от входа.
 const QUEUE_SPOTS: Array[Vector3] = [Vector3(-1.0, 0, -1.15), Vector3(-2.0, 0, 0.0), Vector3(-3.0, 0, 1.15)]
-## Путь обслуженного от окошка к выходу: обойти очередь справа и выйти в дверь (она на южной стене, x = 0).
-const QUEUE_EXIT_PATH: Array[Vector3] = [Vector3(1.3, 0, 0.2), Vector3(1.2, 0, 2.5), Vector3(0.4, 0, 3.2)]
+## Путь обслуженного от окошка к выходу: прямо к двери (она на южной стене, x = 0).
+const QUEUE_EXIT_PATH: Array[Vector3] = [Vector3(0.0, 0, 3.3)]
 const QUEUE_WALK_SPEED := 1.6
 ## Что говорят люди из очереди (по имени узла).
 const QUEUE_LINES := {
@@ -102,6 +102,7 @@ func _arrange_queue(instant: bool) -> void:
 ## у двери звучит шлюз, и человек исчезает — вышел в атриум.
 func _walk_out(person: Npc) -> void:
 	person.enabled = false
+	person.play_animation("Walk")
 	var walk := create_tween()
 	var from := person.position
 	for point in QUEUE_EXIT_PATH:

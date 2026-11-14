@@ -187,6 +187,7 @@ outline_size = 8
 [node name="Spravkina" parent="." instance=ExtResource("6_npc")]
 position = Vector3(0, 0, -2.8)
 display_name = "Секретарь Справкина"
+model_path = "res://assets/models/characters/woman_formal.glb"
 subtitle = "(деканат)"
 color = Color(0.75, 0.4, 0.6, 1)
 
@@ -194,6 +195,7 @@ color = Color(0.75, 0.4, 0.6, 1)
 position = Vector3(3.6, 0, -1.7)
 rotation = Vector3(0, -1.5708, 0)
 display_name = "Вечный студент"
+model_path = "res://assets/models/characters/man_casual_2.glb"
 subtitle = "(в очереди с 2041 г.)"
 color = Color(0.55, 0.55, 0.45, 1)
 
@@ -201,6 +203,7 @@ color = Color(0.55, 0.55, 0.45, 1)
 position = Vector3(2.5, 0, 1.5)
 rotation = Vector3(0, -2.4, 0)
 display_name = "Андрей Лабонин"
+model_path = "res://assets/models/characters/man_adventurer.glb"
 subtitle = "(тоже сдаёт?!)"
 color = Color(0.35, 0.75, 0.45, 1)
 present = false
@@ -211,6 +214,7 @@ present = false
 position = Vector3(-1, 0, -1.15)
 rotation = Vector3(0, 3.14159, 0)
 display_name = "№ 401"
+model_path = "res://assets/models/characters/man_beach.glb"
 subtitle = "(за справкой)"
 color = Color(0.5, 0.6, 0.8, 1)
 
@@ -218,6 +222,7 @@ color = Color(0.5, 0.6, 0.8, 1)
 position = Vector3(-2, 0, 0)
 rotation = Vector3(0, 3.14159, 0)
 display_name = "№ 402"
+model_path = "res://assets/models/characters/woman_punk.glb"
 subtitle = "(3-й раз)"
 color = Color(0.8, 0.6, 0.45, 1)
 
@@ -225,6 +230,7 @@ color = Color(0.8, 0.6, 0.45, 1)
 position = Vector3(-3, 0, 1.15)
 rotation = Vector3(0, 3.14159, 0)
 display_name = "№ 403"
+model_path = "res://assets/models/characters/woman_casual.glb"
 subtitle = "(за Лабонина)"
 color = Color(0.6, 0.75, 0.55, 1)
 

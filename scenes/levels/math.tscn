@@ -287,6 +287,8 @@ outline_size = 0
 [node name="Integralov" parent="." instance=ExtResource("6_npc")]
 position = Vector3(-3, 0, -3.95)
 display_name = "Проф. Интегралов"
+model_path = "res://assets/models/characters/man_suit.glb"
+tint = {"Hair": Color(0.82, 0.82, 0.84, 1), "Suit": Color(0.36, 0.26, 0.19, 1), "Tie": Color(0.55, 0.12, 0.12, 1)}
 subtitle = "(высшая математика)"
 color = Color(0.6, 0.4, 0.8, 1)
 

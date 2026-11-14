@@ -236,6 +236,7 @@ outline_size = 8
 [node name="Syntaksisov" parent="." instance=ExtResource("6_npc")]
 position = Vector3(1.8, 0, -5)
 display_name = "Ст. преп. Синтаксисов"
+model_path = "res://assets/models/characters/man_casual_hoodie.glb"
 subtitle = "(программирование)"
 color = Color(0.35, 0.5, 0.85, 1)
 

@@ -44,6 +44,10 @@ const CREDITS := """[center][font_size=42][b][color=#9ad0ff]СЕССИЯ НА О
 [color=#ffd36b][font_size=27][b]Движок:[/b][/font_size][/color]
 Godot Engine 4
 
+[color=#ffd36b][font_size=27][b]Люди:[/b][/font_size][/color]
+Модели персонажей — Quaternius (CC0)
+Проф. Заглушкин — собственная капсула
+
 [color=#ffd36b][font_size=27][b]Звуки и фоновая музыка:[/b][/font_size][/color]
 Написал Python. Ни один музыкант не пострадал —
 их просто не было в бюджете

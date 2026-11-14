@@ -87,7 +87,7 @@ func _on_zaglushkin(_player: Player) -> void:
 		"call": GameState.add_signature.bind("zaglushkin"),
 	}
 	Dialogue.start([
-		{"speaker": ZAGLUSHKIN, "text": "А, студент. Я тут временно — пока мне не сделали нормальную модель. Ты за подписью?", "choices": [
+		{"speaker": ZAGLUSHKIN, "text": "А, студент. Видишь, всем сделали модельки. Всем, кроме меня. Я подожду, я же временный. Ты за подписью?", "choices": [
 			["Да, распишитесь, пожалуйста.", [sign_line]],
 			["А почему вы капсула?", [
 				{"speaker": ZAGLUSHKIN, "text": "Это называется «заглушка», молодой человек. Перечитай требования ко второму этапу курсового проекта."},

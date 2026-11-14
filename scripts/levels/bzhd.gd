@@ -16,6 +16,24 @@ const DOOR_OPEN_SHIFT := 2.7
 const BOOTS_WALK_SPEED := 2.2
 ## Ниже этой высоты снаружи трос возвращает игрока на платформу у шлюза.
 const FALL_LIMIT := -6.0
+## Что говорит запертая дверь в атриум, пока на игроке скафандр.
+const SUIT_EXIT_MESSAGE := "Перестрахов: «В скафандре — только в шлюз и в космос. Скафандр казённый, а атриум — общественное место. Снять его можно у шкафчика со скафандром»."
+## Страховочный трос идёт от крюка к игроку через направляющую точку у проёма двери: так он не задевает стену.
+## Точки заданы по осям: z — чуть в стороне от косяка (проём шириной 2 м, косяк на z = -1), y — высота троса,
+## x — до стены, в стене (направляющее кольцо) и после неё. Подробности — в _update_tether_rope().
+const OUTER_DOOR_X := 5.0
+const INNER_DOOR_X := 0.0
+## Трос идёт выше верхнего поручня (1,1 м), чтобы не пересекать перила снаружи.
+const GUIDE_Y := 1.35
+## Крепление троса на скафандре: на спине, на этой высоте и чуть позади игрока.
+const TETHER_BACK_HEIGHT := 1.35
+const TETHER_BACK_OFFSET := 0.3
+const GUIDE_Z := -0.89
+## Отступ от оси двери до точек перед стеной и за ней (стена внешней двери толщиной 0,3 м, внутренней — 0,5 м).
+const OUTER_APPROACH := 0.3
+const OUTER_EXIT := 0.4
+const INNER_APPROACH := 0.55
+const INNER_EXIT := 0.45
 ## Сколько разных «незачётов» нужно для пасхалки.
 const DEATHS_FOR_EGG := 3
 
@@ -36,6 +54,8 @@ var stage: Stage:
 var _suit := false
 var _oxygen := false
 var _tether := false
+## Дополнительные отрезки троса: у ломаной до трёх звеньев (крюк, до стены, сквозь проём, до игрока).
+var _rope_extra: Array[MeshInstance3D] = []
 var _inner_closed := false
 var _depressurized := false
 var _outer_open := false
@@ -71,6 +91,11 @@ func _ready() -> void:
 	for debris in $Debris.get_children():
 		debris.interacted.connect(_on_debris.bind(debris))
 	$DeathLayer/Death.hide()
+	for i in 2:
+		var segment: MeshInstance3D = $TetherRope.duplicate()
+		add_child(segment)
+		_rope_extra.append(segment)
+	_add_guide_ring()
 	_inner_door.position.y = _inner_closed_y + DOOR_OPEN_SHIFT
 	if GameState.flags.get("bzhd_mug", false):
 		$Mug.queue_free()
@@ -167,11 +192,25 @@ func _on_suit(_player_node: Player) -> void:
 	if not _require_briefing():
 		return
 	if _suit:
-		GameState.post_message("Скафандр уже на вас. Второй сверху не налезет.")
+		_take_off_suit()
 		return
 	_suit = true
 	Sfx.play("pickup")
 	GameState.post_message("Скафандр надет. Шлем щёлкнул. Дышать стало тесно, но надёжно.")
+	_update_overlay()
+
+
+## Повторное обращение к шкафчику снимает скафандр — пока шлюз не разгерметизирован.
+## Кислород и трос принадлежат скафандру, поэтому проверять и пристёгивать их придётся заново.
+func _take_off_suit() -> void:
+	if _depressurized or _outer_open or _inner_closed:
+		GameState.post_message("Скафандр сейчас снять нельзя: шлюз закрыт, а впереди инструкция.")
+		return
+	_suit = false
+	_oxygen = false
+	_tether = false
+	Sfx.play("pickup")
+	GameState.post_message("Скафандр снят. Кислород и трос придётся проверять заново — это же БЖД.")
 	_update_overlay()
 
 
@@ -399,23 +438,62 @@ func _after_fail() -> void:
 # --- Шлем и трос ---
 
 func _update_overlay() -> void:
+	# В скафандре в атриум не выпускают: дверь заперта, пока скафандр на игроке.
+	$ExitDoor.locked = _suit
+	$SuitLocker.prompt = "Снять скафандр" if _suit else "Надеть скафандр"
+	$ExitDoor.locked_message = SUIT_EXIT_MESSAGE
 	$Overlay/Helmet.visible = _suit
 	%SuitStatus.text = "СКАФАНДР  ·  O2: %s  ·  ТРОС: %s" % [
 		"100%" if _oxygen else "не проверен", "пристёгнут" if _tether else "—"]
 
 
+## Трос идёт от крюка в шлюзе к игроку. Чтобы он не тянулся сквозь стены, снаружи он проходит
+## через проём внешней двери вдоль косяка (через направляющее кольцо), а в брифинг-комнате —
+## через проём внутренней: это ломаная из трёх звеньев, все изломы вне стен.
 func _update_tether_rope() -> void:
 	var rope: MeshInstance3D = $TetherRope
 	rope.visible = _tether
+	for segment in _rope_extra:
+		segment.visible = false
 	if not _tether:
 		return
-	var from: Vector3 = $TetherHook.global_position
-	var to: Vector3 = _player.global_position + Vector3(0, 1.0, 0)
+	var points: Array[Vector3] = [$TetherHook.global_position]
+	var to: Vector3 = _player.global_position + _player.global_basis.z * TETHER_BACK_OFFSET + Vector3(0, TETHER_BACK_HEIGHT, 0)
+	if to.x > OUTER_DOOR_X:
+		points.append(Vector3(OUTER_DOOR_X - OUTER_APPROACH, GUIDE_Y, GUIDE_Z))
+		points.append(Vector3(OUTER_DOOR_X + OUTER_EXIT, GUIDE_Y, GUIDE_Z))
+	elif to.x < INNER_DOOR_X:
+		points.append(Vector3(INNER_DOOR_X + INNER_APPROACH, GUIDE_Y, GUIDE_Z))
+		points.append(Vector3(INNER_DOOR_X - INNER_EXIT, GUIDE_Y, GUIDE_Z))
+	points.append(to)
+	var segments: Array[MeshInstance3D] = [rope]
+	segments.append_array(_rope_extra)
+	for i in points.size() - 1:
+		segments[i].visible = true
+		_place_rope(segments[i], points[i], points[i + 1])
+
+
+## Направляющее кольцо на косяке внешней двери: через него проходит трос, поэтому излом выглядит задуманным.
+func _add_guide_ring() -> void:
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = 0.075
+	torus.outer_radius = 0.105
+	torus.material = ($TetherRope as MeshInstance3D).mesh.material
+	ring.mesh = torus
+	# Кольцо стоит ребром к проходу: дыра смотрит вдоль оси X.
+	ring.rotation_degrees = Vector3(0, 0, 90)
+	ring.position = Vector3(OUTER_DOOR_X, GUIDE_Y, GUIDE_Z)
+	add_child(ring)
+
+
+## Ставит один отрезок троса (цилиндр, вытянутый по Y) между двумя точками.
+func _place_rope(rope: MeshInstance3D, from: Vector3, to: Vector3) -> void:
 	var length := from.distance_to(to)
 	if length < 0.05:
+		rope.visible = false
 		return
 	rope.global_position = (from + to) * 0.5
-	# Цилиндр вытянут по Y — разворачиваем его вдоль троса.
 	var axis := (to - from) / length
 	var side := axis.cross(Vector3.FORWARD)
 	if side.length() < 0.01:

@@ -42,6 +42,8 @@ func _ready() -> void:
 		_restore_props()
 	else:
 		_player.gravity_scale = LOW_GRAVITY
+		# Пока гравитации нет, Невесомова парит и разводит руками, как в невесомости.
+		_teacher.set_weightless(true)
 		GameState.post_message("Ноги отрываются от пола подозрительно легко. Гравитация здесь явно барахлит.")
 	if GameState.flags.get("fuse_ceiling", false):
 		$FuseCeiling.queue_free()
@@ -97,10 +99,6 @@ func _on_teacher(_player_node: Player) -> void:
 						["А почему я тогда не летаю?", [
 							{"speaker": TEACHER, "text": "Хороший вопрос. Генератор сломан не до конца: на предметы гравитация не действует совсем, а на людей — только на треть."},
 							{"speaker": TEACHER, "text": "А на студентов ещё давит сессия. Это тоже своего рода гравитация. Поэтому вы прыгаете высоко, но не улетаете. Пока что."},
-						]],
-						["Где взять предохранители?", [
-							{"speaker": TEACHER, "text": "Вот, вы мне нравитесь — сразу к делу."},
-							gravity_note,
 						]],
 					],
 				},
@@ -204,9 +202,13 @@ func _apply_fixed_state(instant: bool) -> void:
 	var apple_floor := Vector3(_apple.position.x, 0.08, _apple.position.z)
 	if instant:
 		_teacher.position.y = 0.0
+		_teacher.set_weightless(false)
 		_apple.position = apple_floor
 	else:
-		create_tween().tween_property(_teacher, "position:y", 0.0, 0.35).set_ease(Tween.EASE_IN)
+		# Приземлилась — опускает руки и стоит как обычно.
+		var landing := create_tween()
+		landing.tween_property(_teacher, "position:y", 0.0, 0.35).set_ease(Tween.EASE_IN)
+		landing.tween_callback(_teacher.set_weightless.bind(false))
 		create_tween().tween_property(_apple, "position", apple_floor, 0.55) \
 				.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 

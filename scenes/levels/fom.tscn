@@ -203,6 +203,7 @@ outline_size = 10
 [node name="Transistorova" parent="." instance=ExtResource("6_npc")]
 position = Vector3(2.4, 0, -3.95)
 display_name = "Доц. Транзисторова"
+model_path = "res://assets/models/characters/woman_suit.glb"
 subtitle = "(ФОМ)"
 color = Color(0.95, 0.55, 0.2, 1)
 

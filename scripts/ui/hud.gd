@@ -76,6 +76,12 @@ func _refresh_journal() -> void:
 		GameState.easter_eggs.size(), GameState.EASTER_EGGS.size()]
 
 
+## Подсказка может измениться, пока смотришь на предмет (шкафчик: «Надеть» → «Снять»), поэтому обновляем её каждый кадр.
+func _process(_delta: float) -> void:
+	if _focused:
+		_refresh_prompt()
+
+
 func _on_focus_changed(target: Interactable) -> void:
 	_focused = target
 	_refresh_prompt()
