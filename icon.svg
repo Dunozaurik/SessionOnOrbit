@@ -1,9 +1,46 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="24" fill="#0b1026"/>
-  <circle cx="22" cy="24" r="2" fill="#fff"/>
-  <circle cx="104" cy="18" r="1.5" fill="#fff"/>
-  <circle cx="98" cy="104" r="2" fill="#fff"/>
-  <circle cx="64" cy="64" r="28" fill="#4fb3ff"/>
-  <path d="M44 56 q10 -8 20 0 t20 0" stroke="#2a7fd1" stroke-width="5" fill="none"/>
-  <ellipse cx="64" cy="66" rx="50" ry="13" fill="none" stroke="#ffcc4d" stroke-width="5" transform="rotate(-18 64 66)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
+      <stop offset="0" stop-color="#1b2a5e"/>
+      <stop offset="1" stop-color="#070b1f"/>
+    </radialGradient>
+    <radialGradient id="planet" cx="35%" cy="30%" r="80%">
+      <stop offset="0" stop-color="#7fd0ff"/>
+      <stop offset="0.55" stop-color="#2a74d6"/>
+      <stop offset="1" stop-color="#10246b"/>
+    </radialGradient>
+    <clipPath id="ball"><circle cx="118" cy="140" r="64"/></clipPath>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
+  <!-- звёзды -->
+  <g fill="#fff">
+    <circle cx="42" cy="48" r="3"/>
+    <circle cx="205" cy="38" r="2.5"/>
+    <circle cx="224" cy="120" r="2"/>
+    <circle cx="30" cy="150" r="2"/>
+    <circle cx="190" cy="222" r="3"/>
+    <circle cx="86" cy="228" r="2"/>
+    <circle cx="150" cy="30" r="2"/>
+  </g>
+  <!-- планета -->
+  <circle cx="118" cy="140" r="64" fill="url(#planet)"/>
+  <g clip-path="url(#ball)">
+    <path d="M70 120 q22 -18 44 -4 q16 10 10 28 q-12 14 -30 6 q-22 -6 -24 -30z" fill="#58c26a"/>
+    <path d="M128 168 q20 -10 36 4 q6 14 -10 24 q-18 4 -26 -10z" fill="#58c26a"/>
+    <path d="M120 84 q14 -4 30 6 q-10 10 -30 6z" fill="#e8f4ff" opacity="0.85"/>
+    <circle cx="150" cy="190" r="70" fill="#050a22" opacity="0.35"/>
+  </g>
+  <!-- задняя часть орбиты -->
+  <path d="M32 176 A100 34 -22 0 1 200 106" fill="none" stroke="#ffb02e" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+  <!-- передняя часть орбиты -->
+  <path d="M200 106 A100 34 -22 0 1 52 196" fill="none" stroke="#ffb02e" stroke-width="7" stroke-linecap="round"/>
+  <!-- станция -->
+  <g transform="translate(198 112) rotate(-22)">
+    <rect x="-26" y="-6" width="16" height="12" rx="2" fill="#4fa3ff" stroke="#fff" stroke-width="2"/>
+    <rect x="10" y="-6" width="16" height="12" rx="2" fill="#4fa3ff" stroke="#fff" stroke-width="2"/>
+    <rect x="-10" y="-2" width="20" height="4" fill="#cfd6e6"/>
+    <rect x="-8" y="-9" width="16" height="18" rx="4" fill="#f4f6ff" stroke="#ff8a1f" stroke-width="3"/>
+  </g>
+  <!-- зачётка-звезда -->
+  <path d="M70 62 l5 11 12 1.5 -9 8 2.5 12 -10.5 -6 -10.5 6 2.5 -12 -9 -8 12 -1.5z" fill="#ffd24a"/>
 </svg>

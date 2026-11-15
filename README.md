@@ -9,6 +9,20 @@
 1. Запустить Godot → **Import** → выбрать `project.godot` в этой папке.
 2. **F5** — запуск игры с главного меню, **F6** — запуск открытой сцены.
 
+## Сборка и запуск готовой игры
+
+Готовые сборки лежат в `build/` (папка в `.gitignore`, в репозиторий не попадает).
+
+- **Windows:** `build/windows/SessionOnOrbit.exe` — один файл, запускается двойным щелчком, ничего ставить не нужно.
+- **macOS:** `build/macos/SessionOnOrbit.zip` — внутри `Сессия на орбите.app` (универсальная сборка для Intel и Apple Silicon). Приложение не подписано, поэтому при первом запуске macOS может написать, что оно «повреждено» или от неизвестного разработчика: нужно нажать на него правой кнопкой и выбрать «Открыть» либо выполнить в терминале `xattr -cr "Сессия на орбите.app"`.
+
+Пересборка (нужны шаблоны экспорта Godot 4.7.2, настройки лежат в `export_presets.cfg`):
+
+```
+godot --headless --path . --export-release "Windows" build/windows/SessionOnOrbit.exe
+godot --headless --path . --export-release "macOS" build/macos/SessionOnOrbit.zip
+```
+
 ## Управление
 | Клавиша | Действие |
 |---------|----------|
