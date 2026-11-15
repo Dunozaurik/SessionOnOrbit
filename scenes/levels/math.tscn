@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/board_frame.gd" id="96_boardframe"]
 [ext_resource type="Script" path="res://scripts/props/room_skin.gd" id="95_roomskin"]
 [ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/levels/math.gd" id="1_level"]
@@ -325,3 +326,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4)
 
 [node name="RoomSkin" type="Node3D" parent="."]
 script = ExtResource("95_roomskin")
+
+[node name="Frame" type="Node3D" parent="Chalkboard"]
+script = ExtResource("96_boardframe")
+size = Vector2(4.5, 1.5)
+frame_color = Color(0.5, 0.34, 0.2, 1)

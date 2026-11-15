@@ -26,6 +26,14 @@ const CEILING_PANEL_HEIGHT := 0.25
 @export_range(0.0, 1.0) var wall_tint_blend := 0.5
 @export_range(0.0, 1.0) var floor_tint_blend := 0.35
 
+## Потолочные светильники: под каждой потолочной лампой (OmniLight3D «Light…») рисуется светящаяся панель.
+@export var light_panels := true
+@export var light_panel_size := Vector2(1.8, 0.7)
+## Лампы с этими фрагментами в имени не потолочные (над столом, подсветка приборов и т. п.).
+const LIGHT_NAME_EXCLUDE: Array[String] = ["Desk", "Generator", "Moodle", "Dock", "Glow", "Warning", "Blink"]
+## Лампа считается потолочной, если висит не ниже, чем на столько метров под потолком.
+const LIGHT_MAX_DROP := 2.2
+
 var _floor_centers: Array[Vector3] = []
 
 
@@ -44,6 +52,8 @@ func _ready() -> void:
 		_skin_horizontal(geometry.get_node_or_null(NodePath(box_name)) as CSGBox3D, true)
 	for box_name in wall_names:
 		_skin_wall(geometry.get_node_or_null(NodePath(box_name)) as CSGBox3D, box_name in double_sided_names)
+	if light_panels:
+		_add_ceiling_lights(geometry)
 
 
 ## Пол (плитки floor.glb сверху коробки) или потолок (те же плитки вверх ногами снизу коробки).
@@ -139,3 +149,72 @@ func _tint_of(box: CSGBox3D, blend: float) -> Color:
 	var material := box.material as StandardMaterial3D
 	var color := material.albedo_color if material else Color.WHITE
 	return color.lerp(Color.WHITE, blend)
+
+
+## Под каждой потолочной лампой — светящаяся панель; сама лампа поднимается почти к потолку, чтобы свет шёл «из панели».
+func _add_ceiling_lights(geometry: Node) -> void:
+	var ceilings: Array[CSGBox3D] = []
+	for box_name in ceiling_names:
+		var box := geometry.get_node_or_null(NodePath(box_name)) as CSGBox3D
+		if box:
+			ceilings.append(box)
+	for child in get_parent().get_children():
+		if not (child is OmniLight3D) or not child.name.begins_with("Light"):
+			continue
+		var excluded := false
+		for part in LIGHT_NAME_EXCLUDE:
+			if part in child.name:
+				excluded = true
+		if excluded:
+			continue
+		var light := child as OmniLight3D
+		var bottom := _ceiling_bottom_above(light.global_position, ceilings)
+		if is_inf(bottom) or light.global_position.y < bottom - LIGHT_MAX_DROP:
+			continue
+		_build_light_panel(Vector3(light.global_position.x, bottom, light.global_position.z))
+		light.global_position.y = bottom - 0.4
+
+
+## Нижняя грань потолка над точкой (INF, если над ней нет потолка).
+func _ceiling_bottom_above(point: Vector3, ceilings: Array[CSGBox3D]) -> float:
+	for ceiling in ceilings:
+		var local := point - ceiling.global_position
+		if absf(local.x) <= ceiling.size.x * 0.5 and absf(local.z) <= ceiling.size.z * 0.5:
+			return ceiling.global_position.y - ceiling.size.y * 0.5
+	return INF
+
+
+func _build_light_panel(center: Vector3) -> void:
+	var frame_material := StandardMaterial3D.new()
+	frame_material.albedo_color = Color(0.16, 0.18, 0.26)
+	frame_material.metallic = 0.6
+	frame_material.roughness = 0.4
+	var plate_material := StandardMaterial3D.new()
+	plate_material.albedo_color = Color(0.92, 0.96, 1.0)
+	plate_material.emission_enabled = true
+	plate_material.emission = Color(0.88, 0.94, 1.0)
+	plate_material.emission_energy_multiplier = 2.4
+	var divider_material := StandardMaterial3D.new()
+	divider_material.albedo_color = Color(0.5, 0.55, 0.7)
+	divider_material.emission_enabled = true
+	divider_material.emission = Color(0.55, 0.62, 0.85)
+	divider_material.emission_energy_multiplier = 0.6
+	var frame := _panel_box("LightFrame", Vector3(light_panel_size.x + 0.16, 0.05, light_panel_size.y + 0.16), frame_material)
+	frame.global_position = center + Vector3(0, -0.02, 0)
+	var plate := _panel_box("LightPlate", Vector3(light_panel_size.x, 0.03, light_panel_size.y), plate_material)
+	plate.global_position = center + Vector3(0, -0.055, 0)
+	# Две тонкие перекладины делят панель на три секции.
+	for i in 2:
+		var divider := _panel_box("LightDivider", Vector3(0.03, 0.035, light_panel_size.y), divider_material)
+		divider.global_position = center + Vector3(-light_panel_size.x / 6.0 + i * light_panel_size.x / 3.0, -0.057, 0)
+
+
+func _panel_box(box_name: String, box_size: Vector3, material: Material) -> MeshInstance3D:
+	var instance := MeshInstance3D.new()
+	instance.name = box_name
+	var mesh := BoxMesh.new()
+	mesh.size = box_size
+	mesh.material = material
+	instance.mesh = mesh
+	add_child(instance)
+	return instance

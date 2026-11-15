@@ -10,7 +10,10 @@ const TEACHER := "Доц. Транзисторова"
 ## Сколько проваленных попыток нужно для пасхалки «Пересдача — мой путь».
 const FAILS_FOR_EGG := 3
 
-const HALL_OF_FAME := "ДОСКА ПОЧЁТА ТЕСТА ПО ФОМ\n\n1. Доц. Транзисторова — 4 мин\n    (единственная сдавшая)\n2. Лабонин А. — 47 попыток, в процессе"
+const HALL_TITLE := "ДОСКА ПОЧЁТА ТЕСТА ПО ФОМ\n\n1. Доц. Транзисторова — 4 мин"
+const HALL_ONLY_ONE := "\n    (единственная сдавшая)"
+const HALL_LABONIN := "Лабонин А. — 47 попыток, в процессе"
+const HALL_PLAYER := "Ты — ЗАЧЁТ! (Moodle в шоке)"
 
 var stage: Stage:
 	get:
@@ -33,10 +36,13 @@ func _time_limit() -> float:
 	return FomQuestions.BASE_TIME + GameState.cheat_sheets * FomQuestions.SECONDS_PER_CHEAT_SHEET
 
 
+## Пока тест не сдан, Транзисторова — «единственная сдавшая»; сдал — ты вторая строчка, Лабонин ниже.
 func _update_hall_of_fame() -> void:
-	var text := HALL_OF_FAME
+	var text := HALL_TITLE
 	if stage >= Stage.PASSED:
-		text += "\n3. Ты — ЗАЧЁТ! (Moodle в шоке)"
+		text += "\n2. " + HALL_PLAYER + "\n3. " + HALL_LABONIN
+	else:
+		text += HALL_ONLY_ONE + "\n2. " + HALL_LABONIN
 	$HallOfFame.text = text
 
 

@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/board_frame.gd" id="96_boardframe"]
+[ext_resource type="Script" path="res://scripts/props/window_frame.gd" id="97_windowframe"]
 [ext_resource type="Script" path="res://scripts/props/room_skin.gd" id="95_roomskin"]
 [ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/levels/fom.gd" id="1_level"]
@@ -181,7 +183,7 @@ size = Vector2(3.8, 1.2)
 seed_value = 2026
 
 [node name="WindowNote" type="Label3D" parent="."]
-position = Vector3(-5.7, 2.65, 0.5)
+position = Vector3(-5.6, 2.85, 0.5)
 rotation = Vector3(0, 1.5708, 0)
 text = "Напоминание: тест закрывается через 20 секунд после открытия.
 Или раньше. Как повезёт."
@@ -207,14 +209,6 @@ mesh = SubResource("Mesh_moodle")
 [node name="Collision" type="CollisionShape3D" parent="MoodleTerminal"]
 shape = SubResource("Shape_moodle")
 
-[node name="MoodleLabel" type="Label3D" parent="."]
-position = Vector3(5.6, 2.35, -1.5)
-rotation = Vector3(0, -1.5708, 0)
-modulate = Color(0.98, 0.55, 0.15, 1)
-text = "MOODLE"
-font_size = 56
-outline_size = 10
-
 [node name="Transistorova" parent="." instance=ExtResource("6_npc")]
 position = Vector3(2.4, 0, -3.95)
 display_name = "Доц. Транзисторова"
@@ -223,7 +217,7 @@ subtitle = "(ФОМ)"
 color = Color(0.95, 0.55, 0.2, 1)
 
 [node name="SheetChair" parent="." instance=ExtResource("11_sheet")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.5, 2.65)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2.5, 0.55, 2.58)
 id = "fom_chair"
 text = "Транзистор — это как кран, только для электронов. Пить из него нельзя."
 
@@ -249,3 +243,35 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4)
 
 [node name="RoomSkin" type="Node3D" parent="."]
 script = ExtResource("95_roomskin")
+
+[node name="WindowFrame" type="Node3D" parent="."]
+script = ExtResource("97_windowframe")
+
+[node name="Frame" type="Node3D" parent="MoodleTerminal"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.08, 0, 0)
+script = ExtResource("96_boardframe")
+size = Vector2(1.8, 1.2)
+style = 1
+frame_color = Color(0.16, 0.18, 0.26, 1)
+accent_color = Color(1, 0.6, 0.12, 1)
+screen_color = Color(0.06, 0.06, 0.12, 1)
+header_color = Color(1, 0.55, 0.1, 1)
+rows = 0
+header_fraction = 0.26
+hide_parent_mesh = true
+
+[node name="MoodleCaption" type="Label3D" parent="MoodleTerminal/Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.07)
+text = "MOODLE"
+font_size = 64
+outline_size = 8
+modulate = Color(0.12, 0.06, 0.02, 1)
+
+[node name="MoodleInfo" type="Label3D" parent="MoodleTerminal/Frame"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.16, 0.07)
+text = "Тест по ФОМ
+5 вопросов · 20 секунд
+зачёт — от 4 верных"
+font_size = 24
+outline_size = 8
+modulate = Color(0.85, 0.93, 1, 1)

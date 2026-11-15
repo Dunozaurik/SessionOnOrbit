@@ -2,7 +2,7 @@ extends Room
 
 ## Лаборатория физики. Сломался генератор гравитации: предметы летают, гравитация
 ## для игрока ослаблена. Доц. Невесомовой нужны 3 предохранителя: один парит под
-## потолком (допрыгнуть по летающим ящикам), один в шкафу с приборами, третий —
+## потолком (допрыгнуть по летающим платформам), один в шкафу с приборами, третий —
 ## у неё в кармане. Вставил в генератор — всё с грохотом падает, подпись у Невесомовой.
 
 enum Stage { NOT_STARTED, SEARCHING, FIXED, DONE }
@@ -24,6 +24,7 @@ var _time := 0.0
 
 @onready var _player: Player = $Player
 @onready var _teacher: Npc = $Nevesomova
+@onready var _generator_visual: GravityGenerator = $Generator/Visual
 @onready var _apple: Interactable = $Apple
 
 
@@ -102,7 +103,7 @@ func _on_teacher(_player_node: Player) -> void:
 						]],
 					],
 				},
-				{"speaker": TEACHER, "text": "Нужно три запасных предохранителя. Один улетел под самый потолок — придётся прыгать по летающим ящикам у правой стены. Только они, сами видите, на месте не стоят. Второй где-то в шкафу с приборами. А третий... не помню."},
+				{"speaker": TEACHER, "text": "Нужно три запасных предохранителя. Один улетел под самый потолок — придётся прыгать по летающим платформам. Только они, сами видите, на месте не стоят. Второй где-то в шкафу с приборами. А третий... не помню."},
 				{
 					"speaker": TEACHER,
 					"text": "Вставите все три в генератор у стены — и я подпишу зачётку. Если, конечно, смогу удержать ручку.",
@@ -124,7 +125,7 @@ func _on_teacher(_player_node: Player) -> void:
 			elif _fuse_count() == FUSES.size():
 				Dialogue.start([{"speaker": TEACHER, "text": "Все три у вас? Чего ждёте — к генератору у стены, скорее!"}])
 			else:
-				Dialogue.start([{"speaker": TEACHER, "text": "Один предохранитель — под самым потолком: начните с ящика у правой стены и прыгайте всё выше. Второй — в шкафу с приборами у левой. У вас сейчас: %d / 3." % _fuse_count()}])
+				Dialogue.start([{"speaker": TEACHER, "text": "Один предохранитель — под самым потолком: начните с нижней платформы и прыгайте всё выше. Второй — в шкафу с приборами. У вас сейчас: %d / 3." % _fuse_count()}])
 		Stage.FIXED:
 			Dialogue.start([
 				{"speaker": TEACHER, "text": "Гравитация вернулась! А вместе с ней — и мой авторитет."},
@@ -145,12 +146,25 @@ func _sign() -> void:
 	GameState.add_signature("nevesomova")
 
 
+## Предохранители можно брать, только когда Невесомова объяснила задание (этап SEARCHING и дальше).
+func _fuses_allowed(text: String) -> bool:
+	if stage != Stage.NOT_STARTED:
+		return true
+	Sfx.play("denied", -4.0)
+	GameState.post_message(text)
+	return false
+
+
 func _on_ceiling_fuse(_player_node: Player) -> void:
+	if not _fuses_allowed("Хватать казённые предохранители без спроса нельзя. Сначала поговори с Невесомовой: она тут за всё расписывается."):
+		return
 	_take_fuse("fuse_ceiling", "Предохранитель снят из-под потолка!")
 	$FuseCeiling.queue_free()
 
 
 func _on_cabinet(_player_node: Player) -> void:
+	if not _fuses_allowed("Шкаф с приборами заперт на «честное слово». Сначала поговори с Невесомовой — она за каждую колбу расписывается."):
+		return
 	if GameState.flags.get("fuse_cabinet", false):
 		Dialogue.start([{"speaker": "", "text": "В шкафу: осциллограф, маятник Фуко (остановился, обиделся) и чей-то конспект 2003 года."}])
 		return
@@ -180,6 +194,10 @@ func _fix_gravity() -> void:
 	GameState.flags["physics_fixed"] = true
 	stage = Stage.FIXED
 	Sfx.play("success")
+	# Предохранители вставлены: гнёзда загораются зелёным по очереди, потом ядро становится бирюзовым.
+	for i in 3:
+		get_tree().create_timer(0.25 * i).timeout.connect(_light_socket.bind(i))
+	get_tree().create_timer(0.8).timeout.connect(_generator_visual.set_fixed.bind(true))
 	_apply_fixed_state(false)
 	# Грохот падающих предметов — вразнобой.
 	for i in 6:
@@ -191,9 +209,16 @@ func _fix_gravity() -> void:
 	])
 
 
+func _light_socket(index: int) -> void:
+	_generator_visual.light_socket(index)
+	Sfx.play("blip", -2.0, 1.0 + index * 0.25)
+
+
 ## Возвращает гравитацию: предметы падают, ящики и Невесомова опускаются на пол.
 func _apply_fixed_state(instant: bool) -> void:
 	_player.gravity_scale = 1.0
+	if instant:
+		_generator_visual.set_fixed(true)
 	$GeneratorLabel.text = "ГЕНЕРАТОР ГРАВИТАЦИИ\nстатус: всё упало (норма)"
 	for prop in $FloatingProps.get_children():
 		prop.restore_gravity()

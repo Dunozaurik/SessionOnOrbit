@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/soda_machine.gd" id="98_soda"]
+[ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/props/room_skin.gd" id="95_roomskin"]
 [ext_resource type="Script" path="res://scripts/levels/deanery.gd" id="1_level"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -240,8 +242,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.3, 1, 2.3)
 script = ExtResource("5_interactable")
 prompt = "Автомат с газировкой"
 
-[node name="Mesh" type="MeshInstance3D" parent="VendingMachine"]
-mesh = SubResource("Mesh_vending")
+[node name="Model" type="Node3D" parent="VendingMachine"]
+position = Vector3(0, -1, 0)
+rotation = Vector3(0, -1.5707963267948966, 0)
+script = ExtResource("98_soda")
 
 [node name="Collision" type="CollisionShape3D" parent="VendingMachine"]
 shape = SubResource("Shape_vending")
@@ -258,13 +262,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2, 0, -3.2)
 script = ExtResource("5_interactable")
 prompt = "Рассмотреть кактус"
 
-[node name="Pot" type="MeshInstance3D" parent="Cactus"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
-mesh = SubResource("Mesh_pot")
-
-[node name="Plant" type="MeshInstance3D" parent="Cactus"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-mesh = SubResource("Mesh_cactus")
+[node name="Model" type="Node3D" parent="Cactus"]
+position = Vector3(0.0, 0.0, 0.0)
+script = ExtResource("90_modelprop")
+model_path = "res://assets/models/furniture/pottedPlant.glb"
+size = Vector3(0.7, 1.0, 0.7)
 
 [node name="Collision" type="CollisionShape3D" parent="Cactus"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)

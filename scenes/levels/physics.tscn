@@ -1,5 +1,8 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/props/lab_shelf_items.gd" id="99_shelf"]
+[ext_resource type="Script" path="res://scripts/props/gravity_generator.gd" id="98_generator"]
+[ext_resource type="Script" path="res://scripts/props/board_frame.gd" id="96_boardframe"]
 [ext_resource type="Script" path="res://scripts/props/room_skin.gd" id="95_roomskin"]
 [ext_resource type="Script" path="res://scripts/props/model_prop.gd" id="90_modelprop"]
 [ext_resource type="Script" path="res://scripts/levels/physics.gd" id="1_level"]
@@ -181,10 +184,10 @@ size = Vector3(0.4, 0.4, 0.4)
 
 [sub_resource type="BoxMesh" id="Mesh_board"]
 material = SubResource("Mat_board")
-size = Vector3(4.4, 1.7, 0.08)
+size = Vector3(3.4, 1.4, 0.08)
 
 [sub_resource type="BoxShape3D" id="Shape_board"]
-size = Vector3(4.4, 1.7, 0.2)
+size = Vector3(3.4, 1.4, 0.2)
 
 [node name="Physics" type="Node3D"]
 script = ExtResource("1_level")
@@ -193,15 +196,16 @@ script = ExtResource("1_level")
 environment = SubResource("Environment_lab")
 
 [node name="LightA" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 7.5, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 7.5, -3)
 light_color = Color(0.9, 0.95, 1, 1)
-light_energy = 1.2
+light_energy = 1.1
 shadow_enabled = true
 omni_range = 12.0
 
 [node name="LightB" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 7.5, 2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 7.5, -3)
 light_color = Color(0.85, 0.95, 1, 1)
+light_energy = 1.1
 shadow_enabled = true
 omni_range = 11.0
 
@@ -322,10 +326,16 @@ mesh = SubResource("Mesh_platform_small")
 shape = SubResource("Shape_platform_small")
 
 [node name="LightHigh" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.5, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 7.5, 3)
 light_color = Color(0.85, 0.95, 1, 1)
-light_energy = 0.9
-omni_range = 7.0
+light_energy = 1.1
+omni_range = 12.0
+
+[node name="LightC" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 7.5, 3)
+light_color = Color(0.9, 0.95, 1, 1)
+light_energy = 1.1
+omni_range = 12.0
 
 [node name="FuseCeiling" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 7.9, 3)
@@ -420,21 +430,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 5.2)
 script = ExtResource("5_interactable")
 prompt = "Генератор гравитации"
 
-[node name="Mesh" type="MeshInstance3D" parent="Generator"]
-mesh = SubResource("Mesh_generator")
-
-[node name="Socket1" type="MeshInstance3D" parent="Generator"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.3, -0.52)
-mesh = SubResource("Mesh_socket")
-
-[node name="Socket2" type="MeshInstance3D" parent="Generator"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -0.52)
-mesh = SubResource("Mesh_socket")
-
-[node name="Socket3" type="MeshInstance3D" parent="Generator"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.3, -0.52)
-mesh = SubResource("Mesh_socket")
-
 [node name="Collision" type="CollisionShape3D" parent="Generator"]
 shape = SubResource("Shape_generator")
 
@@ -451,8 +446,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 1, 1)
 script = ExtResource("5_interactable")
 prompt = "Порыться в шкафу с приборами"
 
-[node name="Mesh" type="MeshInstance3D" parent="Cabinet"]
-mesh = SubResource("Mesh_cabinet")
+[node name="Model" type="Node3D" parent="Cabinet"]
+position = Vector3(0.0, -1.0, 0.0)
+rotation = Vector3(0, 1.5707963267948966, 0)
+script = ExtResource("90_modelprop")
+model_path = "res://assets/models/furniture/bookcaseClosed.glb"
+size = Vector3(1.6, 2.0, 0.6)
 
 [node name="Collision" type="CollisionShape3D" parent="Cabinet"]
 shape = SubResource("Shape_cabinet")
@@ -465,7 +464,7 @@ font_size = 32
 outline_size = 8
 
 [node name="Chalkboard" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.3, -5.68)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 2.3, -5.68)
 script = ExtResource("5_interactable")
 prompt = "Прочитать доску"
 
@@ -523,3 +522,19 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -4.2)
 
 [node name="RoomSkin" type="Node3D" parent="."]
 script = ExtResource("95_roomskin")
+light_panel_size = Vector2(2.4, 0.9)
+
+[node name="Frame" type="Node3D" parent="Chalkboard"]
+script = ExtResource("96_boardframe")
+size = Vector2(3.4, 1.4)
+frame_color = Color(0.24, 0.27, 0.36, 1)
+accent_color = Color(1, 0.62, 0.15, 1)
+
+[node name="Visual" type="Node3D" parent="Generator"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+script = ExtResource("98_generator")
+ceiling_height = 8.4
+
+[node name="Items" type="Node3D" parent="Cabinet"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 0)
+script = ExtResource("99_shelf")

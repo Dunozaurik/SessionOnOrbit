@@ -453,6 +453,8 @@ func _after_fail() -> void:
 func _update_overlay() -> void:
 	# В скафандре в атриум не выпускают: дверь заперта, пока скафандр на игроке.
 	$ExitDoor.locked = _suit
+	# Пока скафандр на игроке, на стенде его нет; сняли — снова висит на месте.
+	$SuitLocker/Display/Suit.visible = not _suit
 	$SuitLocker.prompt = "Снять скафандр" if _suit else "Надеть скафандр"
 	$ExitDoor.locked_message = SUIT_EXIT_MESSAGE
 	$Overlay/Helmet.visible = _suit
