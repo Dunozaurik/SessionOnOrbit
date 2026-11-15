@@ -57,8 +57,8 @@ func _ready() -> void:
 		sphere.height = 0.06
 		sphere.material = accent
 		lamp.mesh = sphere
-		lamp.global_position = center + _along(offset, along_x) + Vector3(0, height * 0.5 + frame_width * 0.5, 0) + back * -0.1
 		add_child(lamp)
+		lamp.global_position = center + _along(offset, along_x) + Vector3(0, height * 0.5 + frame_width * 0.5, 0) + back * -0.1
 
 
 ## Вектор от окна «вглубь стены»: окно смотрит в комнату, стена — с противоположной стороны.
